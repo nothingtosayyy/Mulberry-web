@@ -27,3 +27,8 @@ data-repo/
 
 # Local server helper
 serve.mjs
+
+# Verification screenshots (temporary, not part of source)
+verify-*.png
+final-*.png
+rewrite-*.png
