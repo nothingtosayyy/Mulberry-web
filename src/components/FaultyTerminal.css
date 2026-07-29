@@ -1,0 +1,19 @@
+/* FaultyTerminal 容器
+   - 默认占满父容器,父容器需指定宽高
+   - 内部 canvas 由 ogl 自动创建并填满
+   - pointer-events: none 避免背景吃掉点击(交给上层内容)
+*/
+
+.faulty-terminal-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.faulty-terminal-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

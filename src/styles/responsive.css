@@ -12,7 +12,7 @@
   }
 
   .hero {
-    min-height: 240px;
+    min-height: 360px; /* 实验性 WebGL 背景需要更高可视区 */
   }
   .hero-col {
     padding: 32px 28px;
@@ -50,7 +50,7 @@
   }
 
   .hero {
-    min-height: 200px;
+    min-height: 320px; /* 实验性 WebGL 背景需要更高可视区 */
   }
   .hero-col {
     padding: 24px 20px;

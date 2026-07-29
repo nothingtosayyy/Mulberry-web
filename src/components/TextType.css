@@ -1,0 +1,32 @@
+/* TextType 容器
+   - 默认 inline-block 包裹文本 + 光标
+   - 文本里的 \n 用 pre-wrap 保留换行
+   - 覆盖 React Bits 默认值,允许 .text-type 作为块级元素(如 h1)
+*/
+
+.text-type {
+  display: inline-block;
+  white-space: pre-wrap;
+  /* 让 text-type 不会因 inline-block 切碎多行;在 h1 中需要作为块级 */
+}
+
+.text-type--block {
+  display: block;
+}
+
+.text-type__content {
+  /* 颜色由组件 style.color 控制(支持 CSS 变量) */
+}
+
+.text-type__cursor {
+  margin-left: 0.25rem;
+  display: inline-block;
+  opacity: 1;
+  /* 默认主题色继承文字色 */
+  color: inherit;
+  font-weight: 500;
+}
+
+.text-type__cursor--hidden {
+  display: none;
+}

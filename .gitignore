@@ -32,3 +32,4 @@ serve.mjs
 verify-*.png
 final-*.png
 rewrite-*.png
+exp-*.png
