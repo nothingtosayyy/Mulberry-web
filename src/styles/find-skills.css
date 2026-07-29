@@ -1,0 +1,239 @@
+/**
+ * 查找 Skills 区域样式
+ * - 顶部:标题 + 搜索框
+ * - 主体:左侧 280px 分类侧边栏 / 右侧滚动表格
+ * - 表格行 hover 高亮,点击跳转到详情页
+ */
+
+.find-section {
+  padding: 0;
+}
+
+.find-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 32px 20px 32px;
+}
+
+.find-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+
+.find-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 8px 18px;
+  width: 260px;
+  transition: border-color 0.15s;
+}
+
+.find-search:focus-within {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.find-search svg {
+  width: 14px;
+  height: 14px;
+  color: var(--fg-dim);
+  flex-shrink: 0;
+}
+
+.find-search input {
+  border: none;
+  background: none;
+  color: var(--fg);
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+}
+
+.find-search input::placeholder {
+  color: var(--fg-dim);
+}
+
+.find-body {
+  display: flex;
+  border-top: 1px solid var(--border);
+  min-height: 600px;
+}
+
+/* ── 侧边栏 ── */
+.find-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 16px 0;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  position: relative;
+  letter-spacing: 0.01em;
+  text-align: left;
+}
+
+.sidebar-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--fg);
+}
+
+.sidebar-item--active {
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sidebar-item--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  background: var(--fg);
+  border-radius: 0 2px 2px 0;
+}
+
+.sidebar-count {
+  font-size: 12px;
+  color: var(--fg-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 表格 ── */
+.find-table-wrap {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.find-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.find-table thead th {
+  text-align: left;
+  padding: 14px 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 2;
+}
+
+.find-table thead th:nth-child(2) {
+  text-align: right;
+  width: 120px;
+}
+
+.find-table thead th:first-child {
+  width: auto;
+}
+
+.find-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+  cursor: pointer;
+  outline: none;
+}
+
+.find-table tbody tr:hover,
+.find-table tbody tr:focus-visible {
+  background: var(--surface-hover);
+}
+
+.find-table td {
+  padding: 14px 20px;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.find-table td:nth-child(2) {
+  text-align: right;
+  color: var(--fg-dim);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  width: 120px;
+}
+
+.td-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge-new {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background: var(--accent-bg);
+  color: var(--accent-text);
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.brand-desc {
+  font-size: 12px;
+  color: var(--fg-dim);
+  line-height: 1.4;
+  max-width: 540px;
+  letter-spacing: 0.01em;
+}
+
+.find-empty {
+  text-align: center;
+  color: var(--fg-dim);
+  padding: 40px 20px !important;
+}
+
+/* ── 表格内部滚动条 ── */
+.find-table-wrap::-webkit-scrollbar {
+  width: 6px;
+}
+.find-table-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+.find-table-wrap::-webkit-scrollbar-thumb {
+  background: var(--surface-border);
+  border-radius: 3px;
+}
+.find-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}

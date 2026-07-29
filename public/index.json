@@ -1,0 +1,368 @@
+{
+  "generatedAt": "2026-07-29T06:00:53.386Z",
+  "source": "local",
+  "categories": [
+    {
+      "key": "all",
+      "label": "全部",
+      "order": 0,
+      "count": 10
+    },
+    {
+      "key": "ai-and-llm",
+      "label": "AI 与大模型平台",
+      "order": 1,
+      "count": 2
+    },
+    {
+      "key": "dev-tools",
+      "label": "开发者工具与 IDE",
+      "order": 2,
+      "count": 1
+    },
+    {
+      "key": "backend",
+      "label": "后端、数据库与 DevOps",
+      "order": 3,
+      "count": 1
+    },
+    {
+      "key": "saas",
+      "label": "效率工具与 SaaS",
+      "order": 4,
+      "count": 1
+    },
+    {
+      "key": "design",
+      "label": "设计与创意工具",
+      "order": 5,
+      "count": 1
+    },
+    {
+      "key": "fintech",
+      "label": "金融科技与加密货币",
+      "order": 6,
+      "count": 1
+    },
+    {
+      "key": "ecommerce",
+      "label": "电商与零售",
+      "order": 7,
+      "count": 1
+    },
+    {
+      "key": "media",
+      "label": "媒体与消费科技",
+      "order": 8,
+      "count": 1
+    },
+    {
+      "key": "auto",
+      "label": "汽车",
+      "order": 9,
+      "count": 1
+    }
+  ],
+  "skills": [
+    {
+      "cat": "ai-and-llm",
+      "slug": "claude",
+      "readmePath": "ai-and-llm/claude/README.md",
+      "designPath": "ai-and-llm/claude/DESIGN.md",
+      "name": "Claude",
+      "desc": "Anthropic 的 AI 助手。温暖赭石色调、清爽编辑式布局。",
+      "color": "#cc785c",
+      "logo": "C",
+      "date": "2026-04-15",
+      "isNew": false,
+      "source": "https://www.anthropic.com",
+      "catLabel": "AI 与大模型平台"
+    },
+    {
+      "cat": "ai-and-llm",
+      "slug": "minimax",
+      "readmePath": "ai-and-llm/minimax/README.md",
+      "designPath": "ai-and-llm/minimax/DESIGN.md",
+      "name": "Minimax",
+      "desc": "AI 模型提供商。大胆深色界面搭配霓虹点缀。",
+      "color": "#00d4aa",
+      "logo": "M",
+      "date": "2026-03-10",
+      "isNew": false,
+      "source": "https://api.minimax.chat",
+      "catLabel": "AI 与大模型平台"
+    },
+    {
+      "cat": "auto",
+      "slug": "bmw-m",
+      "readmePath": "auto/bmw-m/README.md",
+      "designPath": "auto/bmw-m/DESIGN.md",
+      "name": "BMW M",
+      "desc": "高性能汽车。纯黑画布,M 三色条纹点缀,全幅摄影视觉。",
+      "color": "#1c69d4",
+      "logo": "M",
+      "date": "2026-07-15",
+      "isNew": true,
+      "source": "https://www.bmw-m.com",
+      "catLabel": "汽车"
+    },
+    {
+      "cat": "backend",
+      "slug": "clickhouse",
+      "readmePath": "backend/clickhouse/README.md",
+      "designPath": "backend/clickhouse/DESIGN.md",
+      "name": "ClickHouse",
+      "desc": "高速分析数据库。黄色点缀、技术文档风格。",
+      "color": "#faff69",
+      "logo": "C",
+      "date": "2026-05-18",
+      "isNew": false,
+      "source": "https://clickhouse.com",
+      "catLabel": "后端、数据库与 DevOps"
+    },
+    {
+      "cat": "design",
+      "slug": "figma",
+      "readmePath": "design/figma/README.md",
+      "designPath": "design/figma/DESIGN.md",
+      "name": "Figma",
+      "desc": "协作设计工具。多彩活力、趣味与专业并存。",
+      "color": "#a259ff",
+      "logo": "F",
+      "date": "2026-04-10",
+      "isNew": false,
+      "source": "https://www.figma.com",
+      "catLabel": "设计与创意工具"
+    },
+    {
+      "cat": "dev-tools",
+      "slug": "cursor",
+      "readmePath": "dev-tools/cursor/README.md",
+      "designPath": "dev-tools/cursor/DESIGN.md",
+      "name": "Cursor",
+      "desc": "AI 优先代码编辑器。流畅深色界面、渐变点缀。",
+      "color": "#6b5b95",
+      "logo": "C",
+      "date": "2026-04-28",
+      "isNew": false,
+      "source": "https://www.cursor.com",
+      "catLabel": "开发者工具与 IDE"
+    },
+    {
+      "cat": "ecommerce",
+      "slug": "airbnb",
+      "readmePath": "ecommerce/airbnb/README.md",
+      "designPath": "ecommerce/airbnb/DESIGN.md",
+      "name": "Airbnb",
+      "desc": "旅行住宿平台。温暖珊瑚色调、以摄影为核心、圆角 UI 设计。",
+      "color": "#ff5a5f",
+      "logo": "A",
+      "date": "2026-06-20",
+      "isNew": false,
+      "source": "https://www.airbnb.com",
+      "catLabel": "电商与零售"
+    },
+    {
+      "cat": "fintech",
+      "slug": "stripe",
+      "readmePath": "fintech/stripe/README.md",
+      "designPath": "fintech/stripe/DESIGN.md",
+      "name": "Stripe",
+      "desc": "支付基础设施。标志性紫色渐变、weight-300 优雅。",
+      "color": "#635bff",
+      "logo": "S",
+      "date": "2026-01-05",
+      "isNew": false,
+      "source": "https://stripe.com",
+      "catLabel": "金融科技与加密货币"
+    },
+    {
+      "cat": "media",
+      "slug": "spotify",
+      "readmePath": "media/spotify/README.md",
+      "designPath": "media/spotify/DESIGN.md",
+      "name": "Spotify",
+      "desc": "音乐流媒体。深色上的鲜艳绿、粗体排版、专辑封面驱动。",
+      "color": "#1db954",
+      "logo": "S",
+      "date": "2026-01-10",
+      "isNew": false,
+      "source": "https://www.spotify.com",
+      "catLabel": "媒体与消费科技"
+    },
+    {
+      "cat": "saas",
+      "slug": "linear",
+      "readmePath": "saas/linear/README.md",
+      "designPath": "saas/linear/DESIGN.md",
+      "name": "Linear",
+      "desc": "工程师项目管理。极简精密、紫色点缀。",
+      "color": "#5e6ad2",
+      "logo": "L",
+      "date": "2026-03-20",
+      "isNew": false,
+      "source": "https://linear.app",
+      "catLabel": "效率工具与 SaaS"
+    }
+  ],
+  "byCategory": {
+    "ai-and-llm": [
+      {
+        "cat": "ai-and-llm",
+        "slug": "claude",
+        "readmePath": "ai-and-llm/claude/README.md",
+        "designPath": "ai-and-llm/claude/DESIGN.md",
+        "name": "Claude",
+        "desc": "Anthropic 的 AI 助手。温暖赭石色调、清爽编辑式布局。",
+        "color": "#cc785c",
+        "logo": "C",
+        "date": "2026-04-15",
+        "isNew": false,
+        "source": "https://www.anthropic.com",
+        "catLabel": "AI 与大模型平台"
+      },
+      {
+        "cat": "ai-and-llm",
+        "slug": "minimax",
+        "readmePath": "ai-and-llm/minimax/README.md",
+        "designPath": "ai-and-llm/minimax/DESIGN.md",
+        "name": "Minimax",
+        "desc": "AI 模型提供商。大胆深色界面搭配霓虹点缀。",
+        "color": "#00d4aa",
+        "logo": "M",
+        "date": "2026-03-10",
+        "isNew": false,
+        "source": "https://api.minimax.chat",
+        "catLabel": "AI 与大模型平台"
+      }
+    ],
+    "auto": [
+      {
+        "cat": "auto",
+        "slug": "bmw-m",
+        "readmePath": "auto/bmw-m/README.md",
+        "designPath": "auto/bmw-m/DESIGN.md",
+        "name": "BMW M",
+        "desc": "高性能汽车。纯黑画布,M 三色条纹点缀,全幅摄影视觉。",
+        "color": "#1c69d4",
+        "logo": "M",
+        "date": "2026-07-15",
+        "isNew": true,
+        "source": "https://www.bmw-m.com",
+        "catLabel": "汽车"
+      }
+    ],
+    "backend": [
+      {
+        "cat": "backend",
+        "slug": "clickhouse",
+        "readmePath": "backend/clickhouse/README.md",
+        "designPath": "backend/clickhouse/DESIGN.md",
+        "name": "ClickHouse",
+        "desc": "高速分析数据库。黄色点缀、技术文档风格。",
+        "color": "#faff69",
+        "logo": "C",
+        "date": "2026-05-18",
+        "isNew": false,
+        "source": "https://clickhouse.com",
+        "catLabel": "后端、数据库与 DevOps"
+      }
+    ],
+    "design": [
+      {
+        "cat": "design",
+        "slug": "figma",
+        "readmePath": "design/figma/README.md",
+        "designPath": "design/figma/DESIGN.md",
+        "name": "Figma",
+        "desc": "协作设计工具。多彩活力、趣味与专业并存。",
+        "color": "#a259ff",
+        "logo": "F",
+        "date": "2026-04-10",
+        "isNew": false,
+        "source": "https://www.figma.com",
+        "catLabel": "设计与创意工具"
+      }
+    ],
+    "dev-tools": [
+      {
+        "cat": "dev-tools",
+        "slug": "cursor",
+        "readmePath": "dev-tools/cursor/README.md",
+        "designPath": "dev-tools/cursor/DESIGN.md",
+        "name": "Cursor",
+        "desc": "AI 优先代码编辑器。流畅深色界面、渐变点缀。",
+        "color": "#6b5b95",
+        "logo": "C",
+        "date": "2026-04-28",
+        "isNew": false,
+        "source": "https://www.cursor.com",
+        "catLabel": "开发者工具与 IDE"
+      }
+    ],
+    "ecommerce": [
+      {
+        "cat": "ecommerce",
+        "slug": "airbnb",
+        "readmePath": "ecommerce/airbnb/README.md",
+        "designPath": "ecommerce/airbnb/DESIGN.md",
+        "name": "Airbnb",
+        "desc": "旅行住宿平台。温暖珊瑚色调、以摄影为核心、圆角 UI 设计。",
+        "color": "#ff5a5f",
+        "logo": "A",
+        "date": "2026-06-20",
+        "isNew": false,
+        "source": "https://www.airbnb.com",
+        "catLabel": "电商与零售"
+      }
+    ],
+    "fintech": [
+      {
+        "cat": "fintech",
+        "slug": "stripe",
+        "readmePath": "fintech/stripe/README.md",
+        "designPath": "fintech/stripe/DESIGN.md",
+        "name": "Stripe",
+        "desc": "支付基础设施。标志性紫色渐变、weight-300 优雅。",
+        "color": "#635bff",
+        "logo": "S",
+        "date": "2026-01-05",
+        "isNew": false,
+        "source": "https://stripe.com",
+        "catLabel": "金融科技与加密货币"
+      }
+    ],
+    "media": [
+      {
+        "cat": "media",
+        "slug": "spotify",
+        "readmePath": "media/spotify/README.md",
+        "designPath": "media/spotify/DESIGN.md",
+        "name": "Spotify",
+        "desc": "音乐流媒体。深色上的鲜艳绿、粗体排版、专辑封面驱动。",
+        "color": "#1db954",
+        "logo": "S",
+        "date": "2026-01-10",
+        "isNew": false,
+        "source": "https://www.spotify.com",
+        "catLabel": "媒体与消费科技"
+      }
+    ],
+    "saas": [
+      {
+        "cat": "saas",
+        "slug": "linear",
+        "readmePath": "saas/linear/README.md",
+        "designPath": "saas/linear/DESIGN.md",
+        "name": "Linear",
+        "desc": "工程师项目管理。极简精密、紫色点缀。",
+        "color": "#5e6ad2",
+        "logo": "L",
+        "date": "2026-03-20",
+        "isNew": false,
+        "source": "https://linear.app",
+        "catLabel": "效率工具与 SaaS"
+      }
+    ]
+  }
+}

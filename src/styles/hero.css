@@ -1,0 +1,107 @@
+/**
+ * Hero 区样式
+ * - 大标题 40px / 紫色高亮副标题
+ * - 白色圆角「去探索」按钮
+ */
+
+.hero {
+  margin-top: var(--nav-height);
+  display: flex;
+  min-height: 280px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.hero-col {
+  padding: 36px 40px;
+  position: relative;
+}
+
+.hero-col--left {
+  flex: 1;
+}
+
+.hero-headline {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin-bottom: 20px;
+  color: var(--fg);
+}
+
+.hero-headline .accent {
+  color: var(--accent-light);
+}
+
+.hero-sub {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  margin-bottom: 6px;
+  max-width: 420px;
+}
+
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.hero-arrow {
+  margin-left: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+}
+
+.btn-white:hover .hero-arrow {
+  transform: translateX(2px);
+}
+
+/* ── 通用按钮 ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.btn-yellow {
+  background: var(--cta-yellow);
+  color: #111;
+}
+
+.btn-yellow:hover {
+  background: var(--cta-yellow-hover);
+}
+
+.btn-outline {
+  border: 1px solid var(--border-strong);
+  color: var(--fg);
+}
+
+.btn-outline:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn-white {
+  background: #fff;
+  color: #111;
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+  padding: 10px 22px;
+  font-size: 14px;
+}
+
+.btn-white:hover {
+  background: #e8e8e8;
+}
