@@ -2,19 +2,47 @@
  * Hero 区样式
  * - 大标题 40px / 紫色高亮副标题
  * - 白色圆角「去探索」按钮
+ * - 实验性:WebGL 故障终端背景(FaultyTerminal)
  */
 
 .hero {
   margin-top: var(--nav-height);
   display: flex;
-  min-height: 280px;
+  min-height: 420px;
   border-bottom: 1px solid var(--border);
   position: relative;
+  overflow: hidden;
+  isolation: isolate;
 }
 
+/* ── 背景层(FaultyTerminal)────────────────── */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: auto; /* 恢复鼠标交互(WebGL 效果需要) */
+}
+
+/* 顶部到底部加深色渐变,让前景文字有对比度 */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.55) 0%,
+      rgba(10, 10, 10, 0.25) 35%,
+      rgba(10, 10, 10, 0.6) 100%
+    );
+}
+
+/* ── 前景内容层 ──────────────────────────────── */
 .hero-col {
-  padding: 36px 40px;
+  padding: 56px 40px;
   position: relative;
+  z-index: 2; /* 浮在背景和遮罩之上 */
 }
 
 .hero-col--left {
@@ -28,6 +56,7 @@
   letter-spacing: -0.025em;
   margin-bottom: 20px;
   color: var(--fg);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
 }
 
 .hero-headline .accent {
@@ -40,6 +69,7 @@
   color: var(--fg-muted);
   margin-bottom: 6px;
   max-width: 420px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 
 .hero-ctas {
