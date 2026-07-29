@@ -59,6 +59,18 @@
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
 }
 
+/* TextType 包裹 hero-headline 时需作为块级元素(默认 inline-block) */
+.hero-headline.text-type {
+  display: block;
+}
+
+/* 光标 — 项目主题紫,稍重一些,跟打字动更和谐 */
+.hero-cursor {
+  color: var(--accent-light);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
 .hero-headline .accent {
   color: var(--accent-light);
 }
