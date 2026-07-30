@@ -49,7 +49,7 @@ export default function Hero() {
           as="h1"
           className="hero-headline"
           text={['这是桑葚的收藏集', '期望这些内容可以帮助到你']}
-          textColors={['var(--fg)', 'var(--accent-light)']}
+          textColors={['var(--fg-always)', 'var(--accent-light)']}
           typingSpeed={105}
           pauseDuration={2200}
           deletingSpeed={45}
