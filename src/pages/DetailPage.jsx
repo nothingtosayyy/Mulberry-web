@@ -44,12 +44,13 @@ export default function DetailPage() {
   )
 }
 
-/** 详情页内容:用 hook 拉 SKILL.md 原始内容 */
+/** 详情页内容:用 hook 拉 SKILL.md + README.md */
 function DetailContent({ skill, onBack }) {
   const { loading, error, data } = useSkillDetail({
     cat: skill.cat,
     slug: skill.slug,
     skillPath: skill.skillPath,
+    readmePath: skill.readmePath,
   })
 
   return (
@@ -59,7 +60,7 @@ function DetailContent({ skill, onBack }) {
         error={error}
         skill={skill}
         meta={data?.meta || {}}
-        body={data?.body || ''}
+        readme={data?.readme || null}
         onBack={onBack}
       />
       <div className="section-divider" />

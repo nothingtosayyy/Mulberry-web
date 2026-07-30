@@ -26,7 +26,9 @@ export default function FindSkills() {
     const q = query.trim().toLowerCase()
     if (q) {
       list = list.filter(
-        (s) => s.name.toLowerCase().includes(q) || (s.desc || '').toLowerCase().includes(q)
+        (s) =>
+          (s.title || s.name).toLowerCase().includes(q) ||
+          (s.desc || '').toLowerCase().includes(q)
       )
     }
     return list
@@ -123,7 +125,7 @@ export default function FindSkills() {
                     <div className="td-brand">
                       <div className="brand-info">
                         <span className="brand-name">
-                          {skill.name}
+                          {skill.title || skill.name}
                           {skill.isNew && <span className="badge-new">New</span>}
                         </span>
                         <span className="brand-desc">{skill.desc}</span>

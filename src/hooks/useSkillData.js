@@ -39,6 +39,35 @@ function writeCache(payload) {
   } catch {}
 }
 
+/**
+ * 解析 README.md 信息卡:
+ *   - frontmatter.title → title
+ *   - frontmatter.lead / 第一段 → lead
+ *   - 其余段落 → paragraphs(详情页 info-desc 展示)
+ * 返回 null 表示没有 README.md
+ */
+function parseReadme(text) {
+  if (!text) return null
+  const { data, body } = parseFrontmatter(text)
+  // 去掉首行 # 标题(避免与 frontmatter.title 重复)
+  const lines = body.split(/\r?\n/)
+  let i = 0
+  while (i < lines.length && lines[i].trim() === '') i++
+  if (i < lines.length && /^#\s+/.test(lines[i].trim())) i++
+  const rest = lines.slice(i).join('\n').trim()
+  // 按空行分段
+  const paragraphs = rest
+    .split(/\n{2,}/)
+    .map((p) => p.replace(/^\s+|\s+$/g, ''))
+    .filter((p) => p.length > 0)
+  return {
+    title: (data.title || '').toString().trim() || null,
+    lead: paragraphs[0] || '',
+    paragraphs: paragraphs.slice(1),
+    meta: data,
+  }
+}
+
 async function fetchIndex() {
   // cache: 'no-cache' = 浏览器本地仍缓存,但每次请求都带 ETag/If-Modified-Since revalidate。
   // 资源未变 → 304 Not Modified(几百字节,几乎零成本)
@@ -98,10 +127,12 @@ export function useSkillIndex() {
 }
 
 /**
- * 详情页 hook:拉单个 Skill 的 SKILL.md(单文件,含 frontmatter + body)
+ * 详情页 hook:拉单个 Skill 的两个文件
+ *   - SKILL.md: 原始完整文档(详情页 MarkdownPreview 展示)
+ *   - README.md: 中文信息卡(详情页 Info 模块展示 + 中文 title 源)
  * 走 Vercel Edge 代理,边缘 5 分钟缓存
  */
-export function useSkillDetail({ cat, slug, skillPath }) {
+export function useSkillDetail({ cat, slug, skillPath, readmePath }) {
   const [state, setState] = useState({ loading: true, error: null, data: null })
 
   useEffect(() => {
@@ -110,18 +141,26 @@ export function useSkillDetail({ cat, slug, skillPath }) {
       return
     }
     let cancelled = false
-    fetch(`/api/raw/${skillPath}`)
-      .then((r) => {
+    Promise.all([
+      fetch(`/api/raw/${skillPath}`).then((r) => {
         if (!r.ok) throw new Error(`SKILL.md ${r.status}`)
         return r.text()
-      })
-      .then((text) => {
+      }),
+      readmePath
+        ? fetch(`/api/raw/${readmePath}`).then((r) => {
+            if (!r.ok) throw new Error(`README.md ${r.status}`)
+            return r.text()
+          })
+        : Promise.resolve(null),
+    ])
+      .then(([skillText, readmeText]) => {
         if (cancelled) return
-        const fm = parseFrontmatter(text)
+        const fm = parseFrontmatter(skillText)
+        const readme = parseReadme(readmeText)
         setState({
           loading: false,
           error: null,
-          data: { meta: fm.data, body: fm.body, cat, slug },
+          data: { meta: fm.data, body: fm.body, readme, cat, slug },
         })
       })
       .catch((err) => {
@@ -131,7 +170,7 @@ export function useSkillDetail({ cat, slug, skillPath }) {
     return () => {
       cancelled = true
     }
-  }, [cat, slug, skillPath])
+  }, [cat, slug, skillPath, readmePath])
 
   return state
 }

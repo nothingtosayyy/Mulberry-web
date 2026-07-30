@@ -5,21 +5,22 @@ import '../styles/detail.css'
 
 /**
  * 详情页 Info 模块
- * - 数据源:Skill(列表索引里的元数据)+ meta(SKILL.md frontmatter) + body(SKILL.md 正文)
- * - 字段映射:
- *     标题: meta.name
- *     副标题: meta.desc
- *     日期: meta.date
- *     分类: skill.catLabel
- *     描述: body(SKILL.md 主体)
- *     使用方式: "复制 raw URL"(指向 GitHub SKILL.md 原始链接)
+ * - 数据源:
+ *     README.md(中文信息卡): title / lead / paragraphs
+ *     SKILL.md frontmatter(原始): desc / date / source
+ *     列表索引: catLabel / color / logo
+ * - 字段优先级:
+ *     标题: readme.title(中文) > meta.name
+ *     副标题: readme.lead > meta.desc
+ *     info-desc: readme.paragraphs > SKILL.md body 段落
+ *     使用方式: 复制 raw URL(指向 GitHub SKILL.md)
  */
 export default function DetailInfo({
   loading,
   error,
   skill,
   meta,
-  body,
+  readme,
   onBack,
 }) {
   const { showToast } = useToast()
@@ -40,8 +41,12 @@ export default function DetailInfo({
     )
   }
 
-  const name = meta.name || skill?.name || ''
-  const desc = meta.desc || skill?.desc || ''
+  const name = readme?.title || meta.name || skill?.name || ''
+  const lead = readme?.lead || meta.desc || skill?.desc || ''
+  const paragraphs =
+    (readme?.paragraphs && readme.paragraphs.length > 0)
+      ? readme.paragraphs
+      : (skill?.desc ? [skill.desc] : [])
   const date = meta.date || skill?.date || ''
   const catLabel = skill?.catLabel || ''
   const source = meta.source || skill?.source || ''
@@ -71,8 +76,8 @@ export default function DetailInfo({
 
       {/* 标题与副标题 */}
       <header className="info-header">
-        <h1 className="info-title">{loading ? '加载中…' : `Skill: ${name}`}</h1>
-        {!loading && <p className="info-subtitle">{desc}</p>}
+        <h1 className="info-title">{loading ? '加载中…' : name}</h1>
+        {!loading && lead && <p className="info-subtitle">{lead}</p>}
       </header>
 
       {/* 元信息行 */}
@@ -97,9 +102,9 @@ export default function DetailInfo({
       )}
 
       {/* 描述 */}
-      {!loading && body && (
+      {!loading && paragraphs.length > 0 && (
         <div className="info-desc">
-          {body.split(/\n{2,}/).map((para, i) => (
+          {paragraphs.map((para, i) => (
             <p key={i}>{para}</p>
           ))}
         </div>

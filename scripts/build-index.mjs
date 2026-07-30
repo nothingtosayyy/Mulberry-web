@@ -115,15 +115,17 @@ async function localWalk(dir, base = dir) {
 }
 
 /**
- * 识别一个 skill 目录:
- *   - 优先 SKILL.md(新规约,单文件)
- *   - 兼容 README.md(老规约,但不要求 DESIGN.md)
- * 返回 { skillPath } 或 null
+ * 识别一个 skill 目录的产物文件:
+ *   - skill: 优先 SKILL.md(详情页 MarkdownPreview 源),兼容 README.md
+ *   - readme: 优先 README.md(详情页 Info 模块源 + 首页中文 title 源),可选
+ * 返回 { skill, readme } 或 null(连 SKILL.md/README.md 都没有)
  */
-function pickSkillFile(files) {
-  if (files.has('SKILL.md')) return 'SKILL.md'
-  if (files.has('README.md')) return 'README.md'
-  return null
+function pickSkillFiles(files) {
+  const skill = files.has('SKILL.md') ? 'SKILL.md' : files.has('README.md') ? 'README.md' : null
+  if (!skill) return null
+  // README.md 作为信息卡(独立于 SKILL.md 的中文浓缩版),如果存在则一并读
+  const readme = files.has('README.md') ? 'README.md' : null
+  return { skill, readme }
 }
 
 async function loadFromLocal() {
@@ -151,13 +153,15 @@ async function loadFromLocal() {
     const [cat, slug] = parts
     if (cat.startsWith('_') || cat === '.github') continue
     if (slug.startsWith('_')) continue
-    const skillFile = pickSkillFile(files)
-    if (!skillFile) continue
+    const picked = pickSkillFiles(files)
+    if (!picked) continue
     skills.push({
       cat,
       slug,
-      skillPath: `${dir}/${skillFile}`,
-      _localSkill: join(LOCAL_REPO, dir, skillFile),
+      skillPath: `${dir}/${picked.skill}`,
+      readmePath: picked.readme ? `${dir}/${picked.readme}` : null,
+      _localSkill: join(LOCAL_REPO, dir, picked.skill),
+      _localReadme: picked.readme ? join(LOCAL_REPO, dir, picked.readme) : null,
     })
   }
 
@@ -209,12 +213,13 @@ function buildSkillIndexFromTree(tree) {
     const [cat, slug] = parts
     if (cat.startsWith('_') || cat === '.github') continue
     if (slug.startsWith('_')) continue
-    const skillFile = pickSkillFile(files)
-    if (!skillFile) continue
+    const picked = pickSkillFiles(files)
+    if (!picked) continue
     skills.push({
       cat,
       slug,
-      skillPath: `${dir}/${skillFile}`,
+      skillPath: `${dir}/${picked.skill}`,
+      readmePath: picked.readme ? `${dir}/${picked.readme}` : null,
     })
   }
   return skills
@@ -246,13 +251,21 @@ async function readSkillText(skill) {
   return await ghFetchRaw(skill.skillPath)
 }
 
+async function readReadmeText(skill) {
+  if (!skill.readmePath) return null
+  if (skill._localReadme) {
+    return await readFile(skill._localReadme, 'utf8')
+  }
+  return await ghFetchRaw(skill.readmePath)
+}
+
 async function main() {
   console.log('[build-index] 读取数据源…')
   const { cats, skills: index } = await loadIndex()
   const catMap = new Map(cats.map((c) => [c.key, c]))
   console.log(`[build-index] 识别到 ${index.length} 个 Skill,${cats.length} 个分类`)
 
-  console.log('[build-index] 并发读取所有 SKILL.md frontmatter…')
+  console.log('[build-index] 并发读取所有 SKILL.md frontmatter + README.md title…')
   const skills = (
     await Promise.all(
       index.map(async (s) => {
@@ -261,11 +274,24 @@ async function main() {
           const { data } = parseFrontmatter(text)
           // 兼容 Qoder 格式:description → desc
           const desc = (data.desc || data.description || '').toString().replace(/\s+/g, ' ').trim()
+
+          // 读 README.md 取中文 title(可选)
+          let title = null
+          if (s.readmePath) {
+            const readmeText = await readReadmeText(s)
+            if (readmeText) {
+              const { data: rd } = parseFrontmatter(readmeText)
+              title = (rd.title || '').toString().trim() || null
+            }
+          }
+
           return {
             cat: s.cat,
             slug: s.slug,
             skillPath: s.skillPath,
+            readmePath: s.readmePath,
             name: data.name || s.slug,
+            title: title || data.name || s.slug, // 首页与详情页优先用中文 title
             desc: desc.slice(0, 200),
             color: data.color || '#888888',
             logo: data.logo || (data.name || s.slug).slice(0, 1).toUpperCase(),
