@@ -10,32 +10,114 @@
 }
 
 :root {
+  /* ── 颜色 token(深色模式,默认) ── */
   --bg: #0a0a0a;
   --surface: #111111;
   --surface-2: #161616;
   --surface-3: #1a1a1a;
   --surface-hover: #1c1c1c;
   --surface-border: #222222;
+
+  /* 边框 */
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.12);
+  --hover-border: rgba(255, 255, 255, 0.25);
+
+  /* 文字 */
   --fg: #f0f0f0;
   --fg-muted: #a0a0a0;
   --fg-dim: #666666;
+
+  /* 强调色(主题紫) */
   --accent: #7938eb;
   --accent-light: #895df5;
   --accent-bg: rgba(121, 56, 235, 0.12);
   --accent-text: #a68cf8;
+
+  /* CTA */
   --cta-yellow: #fbbf24;
   --cta-yellow-hover: #f59e0b;
+  --btn-yellow-fg: #111111;
+
+  /* 状态 */
   --success: #10b981;
+
+  /* 半透明 hover/active 背景(深色=白透) */
+  --hover-bg-subtle: rgba(255, 255, 255, 0.02);
+  --hover-bg-soft: rgba(255, 255, 255, 0.04);
+  --hover-bg-medium: rgba(255, 255, 255, 0.06);
+  --search-border-focus: rgba(255, 255, 255, 0.20);
+
+  /* 主操作按钮(浅色填充,Hero 区的「去探索」) */
+  --btn-primary-bg: #ffffff;
+  --btn-primary-fg: #111111;
+  --btn-primary-hover: #e8e8e8;
+
+  /* 滚动条 */
+  --scrollbar-hover: #333333;
+
+  /* Hero 区:深色背景 + 浅色前景(两个模式都保持,因为动画是浅色水印) */
+  --hero-overlay-1: rgba(10, 10, 10, 0.55);
+  --hero-overlay-2: rgba(10, 10, 10, 0.25);
+  --hero-overlay-3: rgba(10, 10, 10, 0.60);
+  --hero-bg: var(--bg);
+  --hero-fg: var(--fg);
+  --shadow-text-strong: rgba(0, 0, 0, 0.45);
+  --shadow-text-soft: rgba(0, 0, 0, 0.50);
+
+  /* 字体 */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
     "Noto Sans SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
   --font-mono: "SF Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+
+  /* 圆角 */
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-pill: 9999px;
+
+  /* 尺寸 */
   --nav-height: 64px;
+}
+
+/* ── 浅色模式覆盖 ── */
+:root[data-theme="light"] {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f5f5f5;
+  --surface-3: #eeeeee;
+  --surface-hover: #ebebeb;
+  --surface-border: #e0e0e0;
+
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.12);
+  --hover-border: rgba(0, 0, 0, 0.20);
+
+  --fg: #111111;
+  --fg-muted: #555555;
+  --fg-dim: #888888;
+
+  --accent: #6d28d9;
+  --accent-light: #7c3aed;
+  --accent-bg: rgba(109, 40, 217, 0.10);
+  --accent-text: #5b21b6;
+
+  --hover-bg-subtle: rgba(0, 0, 0, 0.02);
+  --hover-bg-soft: rgba(0, 0, 0, 0.04);
+  --hover-bg-medium: rgba(0, 0, 0, 0.06);
+  --search-border-focus: rgba(0, 0, 0, 0.20);
+
+  /* 浅色模式下,主按钮反向(深色填充 + 白字) */
+  --btn-primary-bg: #1a1a1a;
+  --btn-primary-fg: #ffffff;
+  --btn-primary-hover: #333333;
+
+  --scrollbar-hover: #c0c0c0;
+
+  /* Hero 区在浅色模式下也保持深色局部卡片,token 不变 */
+
+  --shadow-text-strong: rgba(0, 0, 0, 0.30);
+  --shadow-text-soft: rgba(0, 0, 0, 0.35);
 }
 
 html {
@@ -87,5 +169,5 @@ input {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #333;
+  background: var(--scrollbar-hover);
 }

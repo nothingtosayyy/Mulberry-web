@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { GitHubIcon } from './Icon.jsx'
+import ThemeToggle from './ThemeToggle.jsx'
 import '../styles/navigation.css'
 
 /**
@@ -36,6 +37,7 @@ export default function Navigation() {
       </div>
 
       <div className="nav-right">
+        <ThemeToggle />
         <a
           className="nav-gh-btn"
           href="https://github.com"
@@ -44,7 +46,7 @@ export default function Navigation() {
           title="GitHub"
         >
           <GitHubIcon size={16} />
-          GitHub
+          Star on GitHub
         </a>
       </div>
     </nav>

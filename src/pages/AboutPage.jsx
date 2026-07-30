@@ -1,4 +1,5 @@
 import Dither from '../components/Dither.jsx'
+import { useDitherAnimationProps } from '../config/animation.js'
 import '../styles/about.css'
 
 /**
@@ -10,21 +11,15 @@ import '../styles/about.css'
  * 文案由作者自行修改,改下面 ABOUT 段落的 JSX 文本即可
  */
 export default function AboutPage() {
+  // Dither 参数由 src/config/animation.js 统一管理
+  // - 深色模式:Mulberry 紫
+  // - 亮色模式:白色
+  const ditherProps = useDitherAnimationProps()
   return (
     <main className="about-page">
       {/* 左:Dither 动画 */}
       <section className="about-art" aria-hidden="true">
-        <Dither
-          waveColor={[0.475, 0.219, 0.922]}      // RGB 0-1 颜色数组(当前=Mulberry 紫 #895DF5)
-          disableAnimation={false}                // 关闭后波纹静止(节能场景)
-          enableMouseInteraction={true}           // 鼠标靠近时波纹被吸引偏移
-          mouseRadius={0.3}                       // 鼠标影响半径(0=很小,1=全屏)
-          colorNum={0}                            // dither 调色板颜色数(越小越复古)
-          waveAmplitude={0.3}                     // 噪声振幅(0=平面,1=起伏强烈)
-          waveFrequency={4}                       // fbm 频率倍乘(越大越细密)
-          waveSpeed={0.05}                        // 波纹流速(0.05=缓慢,1=快速)
-          pixelSize={3}                           // dither 像素块大小(1=细粒,4=粗块)
-        />
+        <Dither {...ditherProps} />
       </section>
 
       {/* 中:分割线 */}

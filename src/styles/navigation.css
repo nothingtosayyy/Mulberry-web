@@ -63,7 +63,7 @@
 
 .nav-link:hover {
   color: var(--fg);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--hover-bg-soft);
 }
 
 .nav-link--purple {
@@ -97,8 +97,8 @@
 
 .nav-gh-btn:hover {
   color: var(--fg);
-  border-color: rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--hover-border);
+  background: var(--hover-bg-soft);
 }
 
 .nav-gh-btn svg {
@@ -117,4 +117,25 @@
   margin-left: 4px;
   vertical-align: middle;
   opacity: 0.5;
+}
+
+/* ── 主题切换按钮(右侧图标按钮)── */
+.nav-theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  color: var(--fg-muted);
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.nav-theme-btn:hover {
+  color: var(--fg);
+  border-color: var(--hover-border);
+  background: var(--hover-bg-soft);
 }
