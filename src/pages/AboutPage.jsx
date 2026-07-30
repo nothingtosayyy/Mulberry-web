@@ -1,4 +1,5 @@
 import Dither from '../components/Dither.jsx'
+import SplitText from '../components/SplitText.jsx'
 import '../styles/about.css'
 
 /**
@@ -15,15 +16,15 @@ export default function AboutPage() {
       {/* 左:Dither 动画 */}
       <section className="about-art" aria-hidden="true">
         <Dither
-          waveColor={[0.475, 0.219, 0.922]} // Mulberry 紫 #7938eb
-          disableAnimation={false}
-          enableMouseInteraction={true}
-          mouseRadius={0.3}
-          colorNum={4}
-          waveAmplitude={0.3}
-          waveFrequency={3}
-          waveSpeed={0.05}
-          pixelSize={2}
+          waveColor={[0.475, 0.219, 0.922]}      // RGB 0-1 颜色数组(当前=Mulberry 紫 #895DF5)
+          disableAnimation={false}                // 关闭后波纹静止(节能场景)
+          enableMouseInteraction={true}           // 鼠标靠近时波纹被吸引偏移
+          mouseRadius={0.3}                       // 鼠标影响半径(0=很小,1=全屏)
+          colorNum={0}                            // dither 调色板颜色数(越小越复古)
+          waveAmplitude={0.3}                     // 噪声振幅(0=平面,1=起伏强烈)
+          waveFrequency={4}                       // fbm 频率倍乘(越大越细密)
+          waveSpeed={0.05}                        // 波纹流速(0.05=缓慢,1=快速)
+          pixelSize={3}                           // dither 像素块大小(1=细粒,4=粗块)
         />
       </section>
 
@@ -35,37 +36,86 @@ export default function AboutPage() {
         <div className="about-inner">
           {/* ── 站点 ── */}
           <header className="about-header">
-            <span className="about-eyebrow">About</span>
-            <h1 className="about-title">桑葚集</h1>
-            <p className="about-subtitle">一个只收藏"能用、好用"内容的小站</p>
+            {/* <span className="about-eyebrow">About</span> */}
+            <SplitText
+              text="桑葚集"
+              tag="h1"
+              className="about-title"
+              textAlign="left"
+              delay={90}
+              duration={0.7}
+              from={{ opacity: 0, y: 40 }}
+              to={{ opacity: 1, y: 0 }}
+            />
+            <SplitText
+              text={'收藏"能用、好用"的内容'}
+              tag="p"
+              className="about-subtitle"
+              textAlign="left"
+              delay={40}
+              duration={0.5}
+              from={{ opacity: 0, y: 20 }}
+              to={{ opacity: 1, y: 0 }}
+            />
           </header>
 
           <section className="about-section">
-            <h2 className="about-h2">关于这个站</h2>
-            <p className="about-p">
-              桑葚集(Mulberry)是一个纯前端静态站,集中收藏工作与学习里真正用过、觉得值得留下来的内容 —
-              Skills、工具、设计参考、流程模板。不追求数量,只在意每条东西能立刻被复用。
-            </p>
-            <p className="about-p">
-              数据完全公开在 GitHub 仓库(见页脚链接),欢迎 fork,也可以直接 clone 到本地当个人收藏夹用。
-            </p>
+            <SplitText
+              text="关于站点"
+              tag="h2"
+              className="about-h2"
+              textAlign="left"
+              delay={60}
+              duration={0.5}
+              from={{ opacity: 0, y: 24 }}
+              to={{ opacity: 1, y: 0 }}
+            />
+            <SplitText
+              text="收藏工作与学习里真正用过、觉得值得留下来的内容"
+              tag="p"
+              className="about-p"
+              textAlign="left"
+              delay={20}
+              duration={0.5}
+              from={{ opacity: 0, y: 16 }}
+              to={{ opacity: 1, y: 0 }}
+            />
+            <SplitText
+              text="数据完全公开在 GitHub 仓库,欢迎 fork,也可以直接 clone 到本地当个人收藏夹用。"
+              tag="p"
+              className="about-p"
+              textAlign="left"
+              delay={20}
+              duration={0.5}
+              from={{ opacity: 0, y: 16 }}
+              to={{ opacity: 1, y: 0 }}
+            />
           </section>
 
           <div className="about-divider-h" aria-hidden="true" />
 
           {/* ── 作者 ── */}
           <section className="about-section">
-            <h2 className="about-h2">关于作者</h2>
-            <p className="about-p">
-              {/* ↓↓↓ 这里改成你的自我介绍 ↓↓↓ */}
-              一个喜欢把工作流程打磨成可复用模板的产品经理/独立开发者。
-              日常折腾的方向:产品决策框架、PM 工具链、AI 辅助创作、复古视觉系统。
-            </p>
-            <p className="about-p">
-              {/* ↓↓↓ 这里改成你想表达的 ↓↓↓ */}
-              收藏癖严重 — 见到好用的工具、写得好的文档、做得好的产品,都会忍不住整理出来。
-              这个站就是我的私人收藏夹,顺便公开。
-            </p>
+            <SplitText
+              text="关于作者"
+              tag="h2"
+              className="about-h2"
+              textAlign="left"
+              delay={60}
+              duration={0.5}
+              from={{ opacity: 0, y: 24 }}
+              to={{ opacity: 1, y: 0 }}
+            />
+            <SplitText
+              text="桑葚"
+              tag="p"
+              className="about-p"
+              textAlign="left"
+              delay={30}
+              duration={0.5}
+              from={{ opacity: 0, y: 16 }}
+              to={{ opacity: 1, y: 0 }}
+            />
           </section>
 
           <footer className="about-footer">
@@ -73,7 +123,7 @@ export default function AboutPage() {
               GitHub ↗
             </a>
             <span className="about-footer-sep">·</span>
-            <a className="about-link" href="mailto:hi@example.com">
+            <a className="about-link" href="mailto:tiange1@agent.qq.com">
               联系我 ↗
             </a>
           </footer>
