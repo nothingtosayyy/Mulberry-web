@@ -30,9 +30,9 @@ export default function Navigation() {
         <button className="nav-link" type="button">
           资源<span className="dropdown-arrow" />
         </button>
-        <button className="nav-link" type="button">
+        <Link to="/about" className="nav-link">
           关于
-        </button>
+        </Link>
       </div>
 
       <div className="nav-right">

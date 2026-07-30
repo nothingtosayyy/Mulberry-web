@@ -1,0 +1,156 @@
+/* ─────────────────────────────────────────────── */
+/*  About Page — 单屏 50/50 布局                    */
+/* ─────────────────────────────────────────────── */
+
+.about-page {
+  display: flex;
+  align-items: stretch;
+  /* 减去顶部导航的高度,保证一屏(100vh)放下 */
+  min-height: calc(100vh - var(--nav-height));
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* ── 左侧:Dither 动画区 ── */
+.about-art {
+  position: relative;
+  width: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* ── 分割线 ── */
+.about-divider {
+  width: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.about-divider-h {
+  height: 1px;
+  background: var(--border);
+  margin: 32px 0;
+}
+
+/* ── 右侧:内容区 ── */
+.about-content {
+  flex: 1;
+  min-width: 0; /* 防止 flex item 内容溢出 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 64px;
+  overflow-y: auto;
+}
+
+.about-inner {
+  width: 100%;
+  max-width: 520px;
+}
+
+.about-header {
+  margin-bottom: 40px;
+}
+
+.about-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  margin-bottom: 20px;
+}
+
+.about-title {
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.about-subtitle {
+  font-size: 14px;
+  color: var(--fg-muted);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+/* ── 段落 ── */
+.about-section {
+  margin-bottom: 8px;
+}
+
+.about-h2 {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: 16px;
+}
+
+.about-p {
+  font-size: 15px;
+  color: var(--fg);
+  line-height: 1.7;
+  margin-bottom: 14px;
+  letter-spacing: 0.01em;
+}
+
+.about-p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── 底部链接 ── */
+.about-footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 40px;
+  font-size: 13px;
+}
+
+.about-link {
+  color: var(--accent-light);
+  letter-spacing: 0.01em;
+  transition: color 0.15s, opacity 0.15s;
+}
+
+.about-link:hover {
+  color: var(--fg);
+  opacity: 0.85;
+}
+
+.about-footer-sep {
+  color: var(--fg-dim);
+}
+
+/* ── 响应式:窄屏改为上下布局(动画在上,内容在下) ── */
+@media (max-width: 860px) {
+  .about-page {
+    flex-direction: column;
+    min-height: auto;
+  }
+  .about-art {
+    width: 100%;
+    height: 50vh;
+    min-height: 320px;
+  }
+  .about-divider {
+    width: 100%;
+    height: 1px;
+  }
+  .about-content {
+    padding: 40px 28px;
+  }
+  .about-title {
+    font-size: 30px;
+  }
+}
