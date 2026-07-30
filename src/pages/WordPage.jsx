@@ -6,7 +6,7 @@
  *   - 大标题
  *   - 副标题(摘要)
  *   - 元信息行(作者 · 日期 · 阅读时长)
- *   - 主体:左 2/3 正文(800px)+ 右 1/3 "ON THIS PAGE" 锚点列表
+ *   - 主体:左 2/3 正文(800px)+ 右 1/3 "目录" 锚点列表
  *
  * 适配化调整:
  *   - 用现有 detail.css 的 module / md-body 模式(800px 正文,token 化样式)
@@ -76,7 +76,7 @@ function WordContent({ article }) {
       <article className="word-detail-main">
         {/* 面包屑 */}
         <nav className="word-detail-breadcrumb" aria-label="breadcrumb">
-          <Link to="/" className="word-breadcrumb-link">Home</Link>
+          <Link to="/" className="word-breadcrumb-link">首页</Link>
           <span className="word-breadcrumb-sep">/</span>
           <Link to="/words" className="word-breadcrumb-link">文章</Link>
           <span className="word-breadcrumb-sep">/</span>
@@ -85,7 +85,6 @@ function WordContent({ article }) {
 
         {/* 标题区 */}
         <header className="word-detail-header">
-          {article.tag && <span className="word-card-tag word-detail-tag">{article.tag}</span>}
           <h1 className="word-detail-title">{article.title}</h1>
           {article.desc && <p className="word-detail-subtitle">{article.desc}</p>}
         </header>
@@ -118,9 +117,9 @@ function WordContent({ article }) {
         </div>
       </article>
 
-      {/* 右侧 ON THIS PAGE */}
-      <aside className="word-detail-toc" aria-label="on this page">
-        <div className="word-toc-label">ON THIS PAGE</div>
+      {/* 右侧 目录 */}
+      <aside className="word-detail-toc" aria-label="目录">
+        <div className="word-toc-label">目录</div>
         {article.toc && article.toc.length > 0 ? (
           <ul className="word-toc-list">
             {article.toc.map((item, i) => (

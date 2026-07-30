@@ -123,21 +123,6 @@
   min-width: 0;
 }
 
-.word-card-tag {
-  display: inline-block;
-  align-self: flex-start;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 4px;
-  background: var(--accent-bg);
-  color: var(--accent-light);
-  line-height: 1;
-  margin-bottom: 2px;
-}
-
 .word-card-title {
   font-size: 18px;
   font-weight: 500;
@@ -255,10 +240,6 @@
   padding: 16px 0 20px;
 }
 
-.word-detail-tag {
-  margin-bottom: 12px;
-}
-
 .word-detail-title {
   font-size: 32px;
   font-weight: 600;
@@ -304,12 +285,36 @@
   font-size: 14px;
 }
 
-/* ── 右侧 ON THIS PAGE ── */
+/* ── 右侧 目录 ── */
 .word-detail-toc {
   position: sticky;
   top: calc(var(--nav-height) + 24px);
   max-height: calc(100vh - var(--nav-height) - 48px);
   overflow-y: auto;
+  /* 滚动条不常驻:默认透明,悬停/滚动时变实色 */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.word-detail-toc:hover,
+.word-detail-toc:focus-within,
+.word-detail-toc:active {
+  scrollbar-color: var(--fg-dim) transparent;
+}
+/* WebKit / Chromium 滚动条 */
+.word-detail-toc::-webkit-scrollbar {
+  width: 6px;
+}
+.word-detail-toc::-webkit-scrollbar-track {
+  background: transparent;
+}
+.word-detail-toc::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+  transition: background 0.15s;
+}
+.word-detail-toc:hover::-webkit-scrollbar-thumb,
+.word-detail-toc:focus-within::-webkit-scrollbar-thumb {
+  background: var(--fg-dim);
 }
 
 .word-toc-label {

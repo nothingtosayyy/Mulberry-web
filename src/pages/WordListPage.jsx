@@ -21,9 +21,9 @@ export default function WordListPage() {
     <main className="word-list-page" data-component="word-list">
       {/* 顶部介绍 */}
       <header className="word-list-hero">
-        <h1 className="word-list-title">随笔与思考</h1>
+        <h1 className="word-list-title">文章</h1>
         <p className="word-list-sub">
-          随手记录，权是练笔。
+          Skill 收藏夹与随手记录，权是练笔。
         </p>
       </header>
 
@@ -61,7 +61,6 @@ export default function WordListPage() {
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <span className="word-card-main">
-                      {a.tag && <span className="word-card-tag">{a.tag}</span>}
                       <span className="word-card-title">{a.title}</span>
                       {a.desc && (
                         <span className="word-card-desc">{a.desc}</span>
