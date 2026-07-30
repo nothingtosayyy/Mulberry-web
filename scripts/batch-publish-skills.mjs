@@ -192,4 +192,17 @@ for (const s of skills) {
 }
 
 console.log(`\nDONE: ${count} skills copied (as SKILL.md)${failed ? `, ${failed} failed quality gate` : ''}`)
+
+// SKILL.md 复制完毕后,自动生成中文 README.md 信息卡(供详情页 Info 模块 + 首页 title)
+// README.md 的中文 title / lead / body 在 scripts/generate-skill-readmes.mjs 的 mapping 里维护
+// 这里无条件跑,即使有 skill 被 Quality Gate 拦了,也不影响其他 skill 的 README.md 生成
+const { spawnSync } = await import('node:child_process')
+const r = spawnSync('node', [join(ROOT, 'scripts', 'generate-skill-readmes.mjs')], {
+  stdio: 'inherit',
+  shell: false,
+})
+if (r.status !== 0) {
+  console.error('generate-skill-readmes.mjs 失败,请检查 mapping')
+  process.exit(1)
+}
 if (failed) process.exit(1)

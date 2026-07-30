@@ -20,8 +20,10 @@ description: 将用户提供的 skill 文档(SKILL.md)原样写入 mulberry 个�
 
 **约定格式(必须遵守,build-index 据此解析)**
 
-- 每个 skill: `<category>/<slug>/SKILL.md`(单文件)
-- YAML frontmatter 字段:
+- 每个 skill: `<category>/<slug>/` 目录下两个文件
+  - `SKILL.md`(单文件,**原样保留**):原始作者写的完整 skill 文档,详情页 MarkdownPreview 区域展示
+  - `README.md`(AI 重写的中文信息卡):mulberry 读 SKILL.md 后,按详情页 Info 模块结构重写,详情页 Info 模块展示 + 首页中文 title 源
+- SKILL.md frontmatter 字段(详 4 个必填):
   - `name`(显示名,从原 frontmatter 读)
   - `slug`(目录名)
   - `cat`(分类 key,见 `data-repo/categories.json`)
@@ -30,8 +32,12 @@ description: 将用户提供的 skill 文档(SKILL.md)原样写入 mulberry 个�
   - `color`(品牌主色 `#hex`,必填,问用户)
   - `logo`(卡片首字母,默认取 name 首字符)
   - `date`(`YYYY-MM-DD`,默认今天)
-- body:原 SKILL.md 的正文部分,**完全保留**,不要补"使用方式"段落、不要塞设计模板、不要改写章节
-- 已废弃:不要再生成本 skill 早期规约里的 `README.md` + `DESIGN.md` 双文件方案;若 `data-repo/<cat>/<slug>/` 下有遗留的 `README.md`/`DESIGN.md`,**删除掉**
+- README.md frontmatter + body 结构(仅需维护 `title` 一个字段):
+  - `title`(中文标题,首页 + 详情页 Info 标题都靠它,**必填**)
+  - `slug` / `cat`(同 SKILL.md)
+  - body 是一句话 `lead` + 多段 `paragraphs`,Info 模块按段展示
+- body:SKILL.md 的正文部分,**完全保留**,不要补"使用方式"段落、不要塞设计模板、不要改写章节
+- 已废弃:不要再生成本 skill 早期规约里的 `DESIGN.md` 模板
 
 ---
 
@@ -77,6 +83,15 @@ description: 将用户提供的 skill 文档(SKILL.md)原样写入 mulberry 个�
   color:  #FF6B9D    (品牌主色 #hex,问用户)
   logo:   "A"        (默认取 name 首字符,中英文都取第一字)
 ```
+
+如果同时给 SKILL.md(用于详情页 Info 模块的中文信息卡),补充 1 个字段:
+
+```
+额外 1 个字段(用于 README.md 信息卡):
+  title:  AI 页面打磨   (中文标题,首页 + 详情页 Info 标题都靠它)
+```
+
+`title` 默认取 name 转中文或英文原名;批量场景下在 `scripts/generate-skill-readmes.mjs` 的 mapping 里维护。
 
 **分类推断**辅助(若用户不确定):
 - AI / 大模型 / Agent → `ai-and-llm`
