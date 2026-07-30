@@ -121,6 +121,72 @@
   opacity: 0.5;
 }
 
+/* ── 下拉菜单(Skill / 文章)── */
+.nav-dropdown-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-link--dropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link--active {
+  color: var(--fg-always);
+  background: var(--hover-bg-soft-always);
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 320px;
+  background: var(--surface-always);
+  border: 1px solid var(--border-strong-always);
+  border-radius: var(--radius-md);
+  padding: 6px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  z-index: 110;
+  /* 隐藏副作用动画 */
+  animation: nav-dropdown-in 0.12s ease-out;
+}
+
+@keyframes nav-dropdown-in {
+  from { opacity: 0; transform: translate(-50%, -4px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.nav-dropdown-item {
+  display: block;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--fg-always);
+  transition: background 0.12s;
+}
+
+.nav-dropdown-item:hover {
+  background: var(--hover-bg-soft-always);
+}
+
+.nav-dropdown-item-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-always);
+  margin-bottom: 2px;
+  letter-spacing: 0.01em;
+}
+
+.nav-dropdown-item-desc {
+  font-size: 12px;
+  color: var(--fg-muted-always);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
 /* ── 主题切换按钮(右侧图标按钮)── */
 .nav-theme-btn {
   display: inline-flex;

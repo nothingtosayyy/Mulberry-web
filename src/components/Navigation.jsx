@@ -1,18 +1,38 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { GitHubIcon } from './Icon.jsx'
 import ThemeToggle from './ThemeToggle.jsx'
 import '../styles/navigation.css'
 
 /**
  * 顶部固定导航
- * - 左侧: Logo
- * - 中间: 资源(下拉箭头)/关于
- * - 右侧: GitHub 链接
+ * - 左:Logo
+ * - 中:资源(下拉:Skill / 文章)/关于
+ * - 右:主题切换 + GitHub 链接
  *
- * 资源/关于目前为静态展示;如果后续要加下拉菜单,
- * 可把 button 替换为 Dropdown 组件。
+ * 资源下拉:hover 展开 / 离开延迟 200ms 关闭
+ * - 视觉上锁深色(用 -always token),与顶栏风格一致
  */
 export default function Navigation() {
+  const [open, setOpen] = useState(false)
+  const closeTimer = useRef(null)
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  // 路由变化时强制关闭(避免点击后下拉还悬空)
+  useEffect(() => setOpen(false), [location.pathname])
+
+  function scheduleClose() {
+    if (closeTimer.current) clearTimeout(closeTimer.current)
+    closeTimer.current = setTimeout(() => setOpen(false), 180)
+  }
+  function cancelClose() {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current)
+      closeTimer.current = null
+    }
+  }
+
   return (
     <nav className="nav" data-component="navigation">
       <div className="nav-left">
@@ -28,19 +48,58 @@ export default function Navigation() {
       </div>
 
       <div className="nav-center">
-        <button className="nav-link" type="button">
-          资源<span className="dropdown-arrow" />
-        </button>
-        <Link to="/about" className="nav-link">
+        <div
+          className="nav-dropdown-wrap"
+          onMouseEnter={() => { cancelClose(); setOpen(true) }}
+          onMouseLeave={scheduleClose}
+        >
+          <button
+            className={`nav-link nav-link--dropdown${open ? ' nav-link--active' : ''}`}
+            type="button"
+            aria-haspopup="menu"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            资源<span className="dropdown-arrow" />
+          </button>
+
+          {open && (
+            <div className="nav-dropdown" role="menu">
+              <Link
+                to="/"
+                className="nav-dropdown-item"
+                role="menuitem"
+                onClick={() => setOpen(false)}
+              >
+                <div className="nav-dropdown-item-title">Skill</div>
+                <div className="nav-dropdown-item-desc">精选网站的设计观察 · 收录于 GitHub</div>
+              </Link>
+              <Link
+                to="/words"
+                className="nav-dropdown-item"
+                role="menuitem"
+                onClick={() => setOpen(false)}
+              >
+                <div className="nav-dropdown-item-title">文章</div>
+                <div className="nav-dropdown-item-desc">关于产品、设计、AI 的思考</div>
+              </Link>
+            </div>
+          )}
+        </div>
+
+        <NavLink
+          to="/about"
+          className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`}
+        >
           关于
-        </Link>
+        </NavLink>
       </div>
 
       <div className="nav-right">
         <ThemeToggle />
         <a
           className="nav-gh-btn"
-          href="https://github.com"
+          href="https://github.com/nothingtosayyy"
           target="_blank"
           rel="noopener noreferrer"
           title="GitHub"

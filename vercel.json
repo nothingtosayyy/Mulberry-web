@@ -8,7 +8,11 @@
       "destination": "https://raw.githubusercontent.com/nothingtosayyy/Mulberry-SKILL/main/:path*"
     },
     {
-      "source": "/((?!api/).*)",
+      "source": "/api/word/:path*",
+      "destination": "https://raw.githubusercontent.com/nothingtosayyy/Mulberry-word/main/:path*"
+    },
+    {
+      "source": "/((?!api/|assets/|favicon\\.svg).*)",
       "destination": "/index.html"
     }
   ],
@@ -30,6 +34,19 @@
       "headers": [
         { "key": "Cache-Control", "value": "public, s-maxage=300, stale-while-revalidate=86400" },
         { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/api/word/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=300, stale-while-revalidate=86400" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/articles.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=86400" }
       ]
     }
   ]

@@ -8,5 +8,6 @@ outputs
 .design.json
 .vercel
 data-repo
+data-word
 serve.mjs
 verify-v0.2.0.png
