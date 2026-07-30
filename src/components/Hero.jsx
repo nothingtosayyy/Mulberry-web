@@ -35,23 +35,23 @@ export default function Hero() {
       */}
       <div className="hero-bg" aria-hidden="true">
         <FaultyTerminal
-          scale={1.0}
-          gridMul={[1, 1]}
-          digitSize={1.4}
-          timeScale={0.5}
-          scanlineIntensity={0.3}
-          glitchAmount={0.5}
-          flickerAmount={0.3}
-          noiseAmp={0}
-          chromaticAberration={0}
-          dither={0}
-          curvature={0}
-          tint="#7938eb"
-          mouseReact={false}
-          mouseStrength={1}
-          pageLoadAnimation={false}
-          brightness={1}
-          dpr={1}
+          scale={1}              // 整体图案缩放(默认 1)
+          gridMul={[2, 1]}         // 网格密度 [x, y]:控制数字字符行列分布
+          digitSize={1.4}          // 单个数字字符的相对大小
+          timeScale={0.5}          // 动画时间流速(0.5 = 半速,降低节奏以省 CPU)
+          scanlineIntensity={0.8}  // 扫描线强度(0=无,1=最强)
+          glitchAmount={1}       // 故障位移幅度
+          flickerAmount={0.3}      // 闪烁频率(0=不闪)
+          noiseAmp={0.7}            // FBM 噪声振幅(0=关闭,但此时 digit 永远返回 0 → 全黑)
+          chromaticAberration={0}  // 色差偏移(0=关闭,R/B 不再额外 getColor)
+          dither={1}               // 抖色强度(0=关闭)
+          curvature={1}            // 桶形畸变(0=关闭 barrel)
+          tint="#7938eb"           // 主色调(Mulberry 主题紫)
+          mouseReact={false}       // 鼠标互动(关闭以免额外 GPU 开销)
+          mouseStrength={1}        // 鼠标互动强度(仅 mouseReact=true 时生效)
+          pageLoadAnimation={true} // 加载时逐格入场动画(关闭以省 GPU)
+          brightness={0.6}           // 整体亮度乘子
+          dpr={1}                  // 设备像素比锁 1x(Retina 屏单帧像素 -75%)
         />
       </div>
       {/* 顶部深色遮罩,让前景文字更易读 */}
@@ -63,16 +63,15 @@ export default function Hero() {
           className="hero-headline"
           text={['这是桑葚的收藏集', '期望这些内容可以帮助到你']}
           textColors={['var(--fg)', 'var(--accent-light)']}
-          typingSpeed={90}
+          typingSpeed={105}
           pauseDuration={2200}
           deletingSpeed={45}
           loop={true}
           showCursor={true}
           cursorCharacter="_"
           cursorClassName="hero-cursor"
-          variableSpeed={{ min: 80, max: 130 }}
         />
-        <p className="hero-sub">与工作或学习相关,只收藏能用、好用的内容</p>
+        <p className="hero-sub">与工作或学习相关，收藏能用、好用的内容</p>
         <div className="hero-ctas">
           <button className="btn btn-white" type="button" onClick={handleExplore}>
             去探索

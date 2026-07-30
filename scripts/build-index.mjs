@@ -273,15 +273,17 @@ async function main() {
           const text = await readSkillText(s)
           const { data } = parseFrontmatter(text)
           // 兼容 Qoder 格式:description → desc
-          const desc = (data.desc || data.description || '').toString().replace(/\s+/g, ' ').trim()
+          const skillDesc = (data.desc || data.description || '').toString().replace(/\s+/g, ' ').trim()
 
-          // 读 README.md 取中文 title(可选)
+          // 读 README.md 取中文 title + 中文 desc(优先),首页描述用此源
           let title = null
+          let readmeDesc = null
           if (s.readmePath) {
             const readmeText = await readReadmeText(s)
             if (readmeText) {
               const { data: rd } = parseFrontmatter(readmeText)
               title = (rd.title || '').toString().trim() || null
+              readmeDesc = (rd.desc || '').toString().replace(/\s+/g, ' ').trim() || null
             }
           }
 
@@ -292,7 +294,7 @@ async function main() {
             readmePath: s.readmePath,
             name: data.name || s.slug,
             title: title || data.name || s.slug, // 首页与详情页优先用中文 title
-            desc: desc.slice(0, 200),
+            desc: (readmeDesc || skillDesc).slice(0, 200), // 首页描述优先用 README 的中文 desc
             color: data.color || '#888888',
             logo: data.logo || (data.name || s.slug).slice(0, 1).toUpperCase(),
             date: data.date || '',

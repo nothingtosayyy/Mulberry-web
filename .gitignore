@@ -1,35 +1,12 @@
-# Dependencies
 node_modules
-
-# Build output
 dist
 .vite
-
-# OS / Editor
-.DS_Store
-*.local
-.env.local
-
-# Vercel
-.vercel
-.vercel-tmp
-
-# Qoder / Canvas workspace state (not part of source code)
+.trash
+outputs
 .canvas-meta.json
-.design.json
 .design-state.json
-
-# Logs
-*.log
-
-# Data repo (GitHub data source lives in Mulberry-SKILL, not here)
-data-repo/
-
-# Local server helper
+.design.json
+.vercel
+data-repo
 serve.mjs
-
-# Verification screenshots (temporary, not part of source)
-verify-*.png
-final-*.png
-rewrite-*.png
-exp-*.png
+verify-v0.2.0.png

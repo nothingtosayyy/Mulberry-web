@@ -264,6 +264,9 @@ export default function FaultyTerminal({
   const rafRef = useRef(0);
   const loadAnimationStartRef = useRef(0);
   const timeOffsetRef = useRef(Math.random() * 100);
+  // v0.1.6: Hero 出视口时暂停 rAF(以免 GPU 一直满载)
+  const visibleRef = useRef(true);
+  const startRafRef = useRef(() => {});
 
   const tintVec = useMemo(() => hexToRgb(tint), [tint]);
 
@@ -338,6 +341,11 @@ export default function FaultyTerminal({
     resize();
 
     const update = t => {
+      // v0.1.6: Hero 出视口时直接停 rAF(不在不可见时继续 requestAnimationFrame)
+      if (!visibleRef.current) {
+        rafRef.current = 0;
+        return;
+      }
       rafRef.current = requestAnimationFrame(update);
 
       if (pageLoadAnimation && loadAnimationStartRef.current === 0) {
@@ -373,19 +381,43 @@ export default function FaultyTerminal({
 
       renderer.render({ scene: mesh });
     };
-    rafRef.current = requestAnimationFrame(update);
+    // v0.1.6: 提供"启动 rAF"函数(由 IntersectionObserver 在 Hero 进入视口时调用)
+    startRafRef.current = () => {
+      if (!rafRef.current && visibleRef.current) {
+        rafRef.current = requestAnimationFrame(update);
+      }
+    };
+    // v0.1.6: 监听容器是否在视口内,出/入视口时启停 rAF
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        visibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          startRafRef.current();
+        } else {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = 0;
+        }
+      },
+      { threshold: 0 }
+    );
+    visibilityObserver.observe(ctn);
+
+    startRafRef.current();
     ctn.appendChild(gl.canvas);
 
     if (mouseReact) ctn.addEventListener('mousemove', handleMouseMove);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0; // v0.1.6 重置,避免 StrictMode 二次 mount 时 startRafRef 误判 "rAF 已在跑"
+      visibilityObserver.disconnect();
       resizeObserver.disconnect();
       if (mouseReact) ctn.removeEventListener('mousemove', handleMouseMove);
       if (gl.canvas.parentElement === ctn) ctn.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
       loadAnimationStartRef.current = 0;
       timeOffsetRef.current = Math.random() * 100;
+      startRafRef.current = () => {};
     };
   }, [
     dpr,
