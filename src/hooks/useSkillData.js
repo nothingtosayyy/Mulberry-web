@@ -40,7 +40,10 @@ function writeCache(payload) {
 }
 
 async function fetchIndex() {
-  const res = await fetch(INDEX_URL, { cache: 'force-cache' })
+  // cache: 'no-cache' = 浏览器本地仍缓存,但每次请求都带 ETag/If-Modified-Since revalidate。
+  // 资源未变 → 304 Not Modified(几百字节,几乎零成本)
+  // 资源已变(部署后) → 立即拿到新版本,用户无需手动刷新
+  const res = await fetch(INDEX_URL, { cache: 'no-cache' })
   if (!res.ok) {
     throw new Error(
       `index.json failed: ${res.status} — 请先执行 "npm run build:index" 生成静态索引`
