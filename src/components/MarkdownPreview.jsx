@@ -4,17 +4,17 @@ import '../styles/detail.css'
 
 /**
  * 详情页下半部:Markdown 预览
- * - 顶部展示文件名(默认 DESIGN.md)
- * - 主体使用 marked 将 designRaw 解析为 HTML
+ * - 顶部展示文件名(默认 SKILL.md)
+ * - 主体使用 marked 将 body 解析为 HTML
  * - HTML 渲染至 .md-body,沿用原型中的全部样式(token、表、列表、代码等)
  */
 export default function MarkdownPreview({
   loading,
   error,
-  filename = 'DESIGN.md',
-  designRaw = '',
+  filename = 'SKILL.md',
+  body = '',
 }) {
-  const html = designRaw ? markdownToHtml(designRaw) : ''
+  const html = body ? markdownToHtml(body) : ''
 
   return (
     <section className="module module--preview" data-component="preview">

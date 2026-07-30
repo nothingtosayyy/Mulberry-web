@@ -1,11 +1,11 @@
 /**
  * GitHub 仓库作为数据源
  *
- * 约定:
+ * 约定(v0.1.4+):
  *   - 仓库: nothingtosayyy/Mulberry-SKILL
  *   - 顶级目录 = 分类(从 categories.json 查 label)
- *   - <cat>/<slug>/README.md = 信息模块(frontmatter 存元数据)
- *   - <cat>/<slug>/DESIGN.md = 预览模块(9 章节 markdown)
+ *   - <cat>/<slug>/SKILL.md = 单文件(frontmatter 存元数据 + body 存完整说明)
+ *   - 兼容老规约: 若有 README.md(无 DESIGN.md 也算)也认
  *
  * 所有读操作通过 raw.githubusercontent.com 拉,免认证。
  * 写操作不在公开站范围内(用户在 GitHub 直接改)。
@@ -59,12 +59,12 @@ export async function fetchRaw(path) {
 /**
  * 从仓库树构建 Skill 骨架
  * - 排除 _template 等非 Skill 目录
- * - 排除没有 README.md 的目录(没有元数据)
+ * - 优先匹配 SKILL.md,兼容 README.md
  * - 输入:fetchRepoTree() 的 tree 数组
- * - 输出:Array<{ cat, slug, readmePath, designPath }>
+ * - 输出:Array<{ cat, slug, skillPath }>
  */
 export function buildSkillIndex(tree) {
-  // 收集所有目录的子文件,便于判断每个 Skill 是否同时有 README + DESIGN
+  // 收集所有目录的子文件,便于判断每个 Skill 用的是哪个文件
   const byDir = new Map() // dir path -> Set(file)
   for (const node of tree) {
     if (node.type !== 'blob') continue
@@ -84,14 +84,14 @@ export function buildSkillIndex(tree) {
     // 排除约定目录
     if (cat.startsWith('_') || cat === '.github') continue
     if (slug.startsWith('_')) continue
-    // 必须同时包含 README.md + DESIGN.md
-    if (!files.has('README.md') || !files.has('DESIGN.md')) continue
+    // 优先 SKILL.md,兼容 README.md
+    const file = files.has('SKILL.md') ? 'SKILL.md' : files.has('README.md') ? 'README.md' : null
+    if (!file) continue
 
     skills.push({
       cat,
       slug,
-      readmePath: `${dir}/README.md`,
-      designPath: `${dir}/DESIGN.md`,
+      skillPath: `${dir}/${file}`,
     })
   }
   return skills

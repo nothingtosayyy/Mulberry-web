@@ -98,35 +98,30 @@ export function useSkillIndex() {
 }
 
 /**
- * 详情页 hook:拉单个 Skill 的 README + DESIGN
+ * 详情页 hook:拉单个 Skill 的 SKILL.md(单文件,含 frontmatter + body)
  * 走 Vercel Edge 代理,边缘 5 分钟缓存
  */
-export function useSkillDetail({ cat, slug, readmePath, designPath }) {
+export function useSkillDetail({ cat, slug, skillPath }) {
   const [state, setState] = useState({ loading: true, error: null, data: null })
 
   useEffect(() => {
-    if (!readmePath || !designPath) {
-      setState({ loading: false, error: new Error('Missing path'), data: null })
+    if (!skillPath) {
+      setState({ loading: false, error: new Error('Missing skillPath'), data: null })
       return
     }
     let cancelled = false
-    Promise.all([
-      fetch(`/api/raw/${readmePath}`).then((r) => {
-        if (!r.ok) throw new Error(`README ${r.status}`)
+    fetch(`/api/raw/${skillPath}`)
+      .then((r) => {
+        if (!r.ok) throw new Error(`SKILL.md ${r.status}`)
         return r.text()
-      }),
-      fetch(`/api/raw/${designPath}`).then((r) => {
-        if (!r.ok) throw new Error(`DESIGN ${r.status}`)
-        return r.text()
-      }),
-    ])
-      .then(([readme, design]) => {
+      })
+      .then((text) => {
         if (cancelled) return
-        const fm = parseFrontmatter(readme)
+        const fm = parseFrontmatter(text)
         setState({
           loading: false,
           error: null,
-          data: { meta: fm.data, body: fm.body, designRaw: design, cat, slug },
+          data: { meta: fm.data, body: fm.body, cat, slug },
         })
       })
       .catch((err) => {
@@ -136,7 +131,7 @@ export function useSkillDetail({ cat, slug, readmePath, designPath }) {
     return () => {
       cancelled = true
     }
-  }, [cat, slug, readmePath, designPath])
+  }, [cat, slug, skillPath])
 
   return state
 }

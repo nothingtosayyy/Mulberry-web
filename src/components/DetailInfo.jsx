@@ -5,14 +5,14 @@ import '../styles/detail.css'
 
 /**
  * 详情页 Info 模块
- * - 数据源:Skill(列表索引里的元数据)+ meta(README frontmatter) + body(README 正文)
+ * - 数据源:Skill(列表索引里的元数据)+ meta(SKILL.md frontmatter) + body(SKILL.md 正文)
  * - 字段映射:
  *     标题: meta.name
  *     副标题: meta.desc
  *     日期: meta.date
  *     分类: skill.catLabel
- *     描述: body(README 主体)
- *     使用方式: "复制 raw URL"(指向 GitHub DESIGN.md 原始链接)
+ *     描述: body(SKILL.md 主体)
+ *     使用方式: "复制 raw URL"(指向 GitHub SKILL.md 原始链接)
  */
 export default function DetailInfo({
   loading,
@@ -20,7 +20,6 @@ export default function DetailInfo({
   skill,
   meta,
   body,
-  designRaw,
   onBack,
 }) {
   const { showToast } = useToast()
@@ -47,9 +46,9 @@ export default function DetailInfo({
   const catLabel = skill?.catLabel || ''
   const source = meta.source || skill?.source || ''
 
-  // GitHub raw URL:指向 DESIGN.md
+  // GitHub raw URL:指向 SKILL.md
   const rawUrl = skill
-    ? `https://raw.githubusercontent.com/nothingtosayyy/Mulberry-SKILL/main/${skill.designPath}`
+    ? `https://raw.githubusercontent.com/nothingtosayyy/Mulberry-SKILL/main/${skill.skillPath}`
     : ''
   const githubUrl = skill
     ? `https://github.com/nothingtosayyy/Mulberry-SKILL/tree/main/${skill.cat}/${skill.slug}`
@@ -115,15 +114,15 @@ export default function DetailInfo({
             <button
               className="code-copy"
               type="button"
-              onClick={() => handleCopy(rawUrl, '已复制 DESIGN.md 链接')}
-              title="复制 DESIGN.md 链接"
-              aria-label="复制 DESIGN.md 链接"
+              onClick={() => handleCopy(rawUrl, '已复制 SKILL.md 链接')}
+              title="复制 SKILL.md 链接"
+              aria-label="复制 SKILL.md 链接"
             >
               <CopyIcon size={16} />
             </button>
           </div>
           <p className="usage-hint">
-            复制此链接,让 AI 助手拉取 DESIGN.md 并按规范生成 UI;
+            复制此链接,让 AI 助手拉取 SKILL.md 并按规范使用;
             {source && (
               <>
                 {' '}原始网站:

@@ -9,9 +9,15 @@
  *   public/index.json  { generatedAt, categories, skills, byCategory }
  *
  * 用法:
- *   node scripts/build-index.mjs           # 默认:本地优先,GitHub 兜底
- *   GH_TOKEN=ghp_xxx node scripts/build-index.mjs   # 给 GitHub API 鉴权
- *   FORCE_REMOTE=1 node scripts/build-index.mjs     # 跳过本地,直接走 GitHub
+ *   node scripts/build-index.mjs                  # 默认:本地优先,GitHub 兜底
+ *   GH_TOKEN=ghp_xxx node scripts/build-index.mjs  # 给 GitHub API 鉴权
+ *   FORCE_REMOTE=1 node scripts/build-index.mjs    # 跳过本地,直接走 GitHub
+ *
+ * 规约(v0.1.4+):
+ *   每个 skill: <cat>/<slug>/SKILL.md(单文件,原样保留)
+ *   - 优先匹配 SKILL.md;兼容老规约 README.md(无 DESIGN.md 也算)
+ *   - frontmatter 字段: name, slug, cat, desc, source, color, logo, date, isNew
+ *   - 兼容原 Qoder 格式: description → desc
  */
 
 import { writeFile, mkdir, readFile, readdir } from 'node:fs/promises'
@@ -32,29 +38,48 @@ const REPO = {
 const API_BASE = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}`
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO.owner}/${REPO.repo}/${REPO.branch}`
 
-// 极简 YAML frontmatter 解析(避免双份维护,与前端 src/data/parser.js 保持一致)
+// 极简 YAML frontmatter 解析:处理 `>` `|` 块标量 + 字符串引号 + 数字布尔
 const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/
 function parseFrontmatter(text) {
   const m = text.match(FRONTMATTER_RE)
   if (!m) return { data: {}, body: text }
   const [, fmText, body] = m
   const data = {}
-  for (const rawLine of fmText.split(/\r?\n/)) {
-    const line = rawLine.trim()
-    if (!line || line.startsWith('#')) continue
+  const lines = fmText.split(/\r?\n/)
+  let i = 0
+  while (i < lines.length) {
+    const line = lines[i]
     const mm = line.match(/^([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$/)
-    if (!mm) continue
-    const [, key, rawValue] = mm
-    let value = rawValue.trim()
+    if (!mm) { i++; continue }
+    const [, key, firstVal] = mm
+    const trimmed = firstVal.trim()
+    // 块标量 `>` (折叠) 或 `|` (字面)
+    if (trimmed === '>' || trimmed === '>-' || trimmed === '|' || trimmed === '|-') {
+      const parts = []
+      i++
+      while (i < lines.length && /^\s+/.test(lines[i]) && lines[i].trim() !== '') {
+        parts.push(lines[i].replace(/^\s+/, ''))
+        i++
+      }
+      let block = parts.join(' ')
+      if (trimmed.startsWith('>')) {
+        block = block.replace(/\s+/g, ' ').trim()
+      } else {
+        block = block.replace(/\s+/g, ' ').trim()
+      }
+      data[key] = block
+      continue
+    }
+    let value = trimmed
     if (
       (value.startsWith('"') && value.endsWith('"')) ||
       (value.startsWith("'") && value.endsWith("'"))
-    )
-      value = value.slice(1, -1)
+    ) value = value.slice(1, -1)
     if (value === 'true') value = true
     else if (value === 'false') value = false
     else if (/^-?\d+(\.\d+)?$/.test(value)) value = Number(value)
     data[key] = value
+    i++
   }
   return { data, body }
 }
@@ -68,7 +93,6 @@ function ghHeaders(extra = {}) {
 // ------------------ 数据源 1:本地 data-repo ------------------
 
 async function localWalk(dir, base = dir) {
-  // 同步遍历:返回 [{ path, isDir }]
   const out = []
   let entries
   try {
@@ -90,6 +114,18 @@ async function localWalk(dir, base = dir) {
   return out
 }
 
+/**
+ * 识别一个 skill 目录:
+ *   - 优先 SKILL.md(新规约,单文件)
+ *   - 兼容 README.md(老规约,但不要求 DESIGN.md)
+ * 返回 { skillPath } 或 null
+ */
+function pickSkillFile(files) {
+  if (files.has('SKILL.md')) return 'SKILL.md'
+  if (files.has('README.md')) return 'README.md'
+  return null
+}
+
 async function loadFromLocal() {
   if (!existsSync(LOCAL_REPO)) return null
   const all = await localWalk(LOCAL_REPO)
@@ -98,7 +134,6 @@ async function loadFromLocal() {
 
   const cats = JSON.parse(await readFile(join(LOCAL_REPO, 'categories.json'), 'utf8'))
 
-  // 收集所有二级目录的子文件
   const byDir = new Map()
   for (const x of all) {
     if (x.isDir) continue
@@ -116,13 +151,13 @@ async function loadFromLocal() {
     const [cat, slug] = parts
     if (cat.startsWith('_') || cat === '.github') continue
     if (slug.startsWith('_')) continue
-    if (!files.has('README.md') || !files.has('DESIGN.md')) continue
+    const skillFile = pickSkillFile(files)
+    if (!skillFile) continue
     skills.push({
       cat,
       slug,
-      readmePath: `${dir}/README.md`,
-      designPath: `${dir}/DESIGN.md`,
-      _localReadme: join(LOCAL_REPO, dir, 'README.md'),
+      skillPath: `${dir}/${skillFile}`,
+      _localSkill: join(LOCAL_REPO, dir, skillFile),
     })
   }
 
@@ -174,12 +209,12 @@ function buildSkillIndexFromTree(tree) {
     const [cat, slug] = parts
     if (cat.startsWith('_') || cat === '.github') continue
     if (slug.startsWith('_')) continue
-    if (!files.has('README.md') || !files.has('DESIGN.md')) continue
+    const skillFile = pickSkillFile(files)
+    if (!skillFile) continue
     skills.push({
       cat,
       slug,
-      readmePath: `${dir}/README.md`,
-      designPath: `${dir}/DESIGN.md`,
+      skillPath: `${dir}/${skillFile}`,
     })
   }
   return skills
@@ -204,11 +239,11 @@ async function loadIndex() {
   return await loadFromGitHub()
 }
 
-async function readReadmeText(skill) {
-  if (skill._localReadme) {
-    return await readFile(skill._localReadme, 'utf8')
+async function readSkillText(skill) {
+  if (skill._localSkill) {
+    return await readFile(skill._localSkill, 'utf8')
   }
-  return await ghFetchRaw(skill.readmePath)
+  return await ghFetchRaw(skill.skillPath)
 }
 
 async function main() {
@@ -217,20 +252,21 @@ async function main() {
   const catMap = new Map(cats.map((c) => [c.key, c]))
   console.log(`[build-index] 识别到 ${index.length} 个 Skill,${cats.length} 个分类`)
 
-  console.log('[build-index] 并发读取所有 README frontmatter…')
+  console.log('[build-index] 并发读取所有 SKILL.md frontmatter…')
   const skills = (
     await Promise.all(
       index.map(async (s) => {
         try {
-          const text = await readReadmeText(s)
+          const text = await readSkillText(s)
           const { data } = parseFrontmatter(text)
+          // 兼容 Qoder 格式:description → desc
+          const desc = (data.desc || data.description || '').toString().replace(/\s+/g, ' ').trim()
           return {
             cat: s.cat,
             slug: s.slug,
-            readmePath: s.readmePath,
-            designPath: s.designPath,
+            skillPath: s.skillPath,
             name: data.name || s.slug,
-            desc: data.desc || '',
+            desc: desc.slice(0, 200),
             color: data.color || '#888888',
             logo: data.logo || (data.name || s.slug).slice(0, 1).toUpperCase(),
             date: data.date || '',
@@ -239,7 +275,7 @@ async function main() {
             catLabel: catMap.get(s.cat)?.label || s.cat,
           }
         } catch (e) {
-          console.warn(`[build-index] skip ${s.readmePath}: ${e.message}`)
+          console.warn(`[build-index] skip ${s.skillPath}: ${e.message}`)
           return null
         }
       })
