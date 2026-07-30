@@ -1,5 +1,4 @@
 import Dither from '../components/Dither.jsx'
-import SplitText from '../components/SplitText.jsx'
 import '../styles/about.css'
 
 /**
@@ -37,85 +36,28 @@ export default function AboutPage() {
           {/* ── 站点 ── */}
           <header className="about-header">
             {/* <span className="about-eyebrow">About</span> */}
-            <SplitText
-              text="桑葚集"
-              tag="h1"
-              className="about-title"
-              textAlign="left"
-              delay={90}
-              duration={0.7}
-              from={{ opacity: 0, y: 40 }}
-              to={{ opacity: 1, y: 0 }}
-            />
-            <SplitText
-              text={'收藏"能用、好用"的内容'}
-              tag="p"
-              className="about-subtitle"
-              textAlign="left"
-              delay={40}
-              duration={0.5}
-              from={{ opacity: 0, y: 20 }}
-              to={{ opacity: 1, y: 0 }}
-            />
+            <h1 className="about-title">桑葚集</h1>
+            <p className="about-subtitle">收藏"能用、好用"的内容</p>
           </header>
 
           <section className="about-section">
-            <SplitText
-              text="关于站点"
-              tag="h2"
-              className="about-h2"
-              textAlign="left"
-              delay={60}
-              duration={0.5}
-              from={{ opacity: 0, y: 24 }}
-              to={{ opacity: 1, y: 0 }}
-            />
-            <SplitText
-              text="收藏工作与学习里真正用过、觉得值得留下来的内容"
-              tag="p"
-              className="about-p"
-              textAlign="left"
-              delay={20}
-              duration={0.5}
-              from={{ opacity: 0, y: 16 }}
-              to={{ opacity: 1, y: 0 }}
-            />
-            <SplitText
-              text="数据完全公开在 GitHub 仓库,欢迎 fork,也可以直接 clone 到本地当个人收藏夹用。"
-              tag="p"
-              className="about-p"
-              textAlign="left"
-              delay={20}
-              duration={0.5}
-              from={{ opacity: 0, y: 16 }}
-              to={{ opacity: 1, y: 0 }}
-            />
+            <h2 className="about-h2">关于站点</h2>
+            <p className="about-p">
+              收藏工作与学习里真正用过、觉得值得留下来的内容
+            </p>
+            <p className="about-p">
+              数据完全公开在 GitHub 仓库,欢迎 fork,也可以直接 clone 到本地当个人收藏夹用。
+            </p>
           </section>
 
           <div className="about-divider-h" aria-hidden="true" />
 
           {/* ── 作者 ── */}
           <section className="about-section">
-            <SplitText
-              text="关于作者"
-              tag="h2"
-              className="about-h2"
-              textAlign="left"
-              delay={60}
-              duration={0.5}
-              from={{ opacity: 0, y: 24 }}
-              to={{ opacity: 1, y: 0 }}
-            />
-            <SplitText
-              text="桑葚"
-              tag="p"
-              className="about-p"
-              textAlign="left"
-              delay={30}
-              duration={0.5}
-              from={{ opacity: 0, y: 16 }}
-              to={{ opacity: 1, y: 0 }}
-            />
+            <h2 className="about-h2">关于作者</h2>
+            <p className="about-p">
+              桑葚
+            </p>
           </section>
 
           <footer className="about-footer">
