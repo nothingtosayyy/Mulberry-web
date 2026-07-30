@@ -6,14 +6,21 @@
  *    满足 README frontmatter 的所有字段需求(无需引入 js-yaml 依赖)。
  *
  * 2) markdownToHtml(md)    → string
- *    走 marked 解析,GFM 开启。
+ *    走 marked 解析,GFM 开启;给 h2/h3 加 id(供 Word 详情页右侧 TOC 锚点跳转)
  */
 
-import { marked } from 'marked'
+import { Marked } from 'marked'
 
-marked.setOptions({
-  gfm: true,
-  breaks: false,
+const md = new Marked()
+md.setOptions({ gfm: true, breaks: false })
+md.use({
+  renderer: {
+    heading({ tokens, depth }) {
+      const text = this.parser.parseInline(tokens)
+      const id = tokens.map((t) => (t.text !== undefined ? t.text : '')).join('').trim()
+      return `<h${depth} id="${id}">${text}</h${depth}>\n`
+    },
+  },
 })
 
 /**
@@ -61,11 +68,10 @@ export function parseFrontmatter(text) {
 
 /**
  * 将 markdown 文本转为 HTML
- * @param {string} md
+ * @param {string} input
  * @returns {string}
  */
-export function markdownToHtml(md) {
-  if (!md) return ''
-  // marked v18: parse 是同步的(默认 lexer/parser 同步)
-  return marked.parse(md)
+export function markdownToHtml(input) {
+  if (!input) return ''
+  return md.parse(input)
 }

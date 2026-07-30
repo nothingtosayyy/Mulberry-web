@@ -23,14 +23,14 @@ export default function WordListPage() {
       <header className="word-list-hero">
         <h1 className="word-list-title">随笔与思考</h1>
         <p className="word-list-sub">
-          围绕产品、设计、AI 与工具的随手记录;不成体系,权当练笔。
+          随手记录，权是练笔。
         </p>
       </header>
 
       {/* Latest Posts */}
       <section className="word-list-section">
         <div className="word-list-section-head">
-          <h2 className="word-list-section-title">Latest Posts</h2>
+          <h2 className="word-list-section-title">Posts</h2>
           <span className="word-list-section-count">
             {data ? `${data.articles.length} 篇` : '…'}
           </span>

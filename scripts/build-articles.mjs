@@ -37,7 +37,7 @@ import { writeFile, mkdir, readFile, readdir } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { existsSync } from 'node:fs'
-import { marked } from 'marked'
+import { Marked } from 'marked'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..')
@@ -53,13 +53,16 @@ const API_BASE = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}`
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO.owner}/${REPO.repo}/${REPO.branch}`
 
 // ── 极简 frontmatter 解析(同 build-index.mjs 风格,保持简单) ──
-const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/
+// 注意:必须用 m[0].length 截断 body。
+// 原版 `^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$` 的 `([\s\S]*)$` 会含上
+// 原文中后续所有内容(包含第二处 `---` 分割线),导致 body 重复。
+// 严格用 m[0].length 截取剩余原文。
 function parseFrontmatter(text) {
-  const m = text.match(FRONTMATTER_RE)
+  if (!text.startsWith('---')) return { data: {}, body: text }
+  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/)
   if (!m) return { data: {}, body: text }
-  const [, fmText, body] = m
   const data = {}
-  for (const line of fmText.split(/\r?\n/)) {
+  for (const line of m[1].split(/\r?\n/)) {
     const mm = line.match(/^([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$/)
     if (!mm) continue
     const [, key, raw] = mm
@@ -73,17 +76,8 @@ function parseFrontmatter(text) {
     else if (/^-?\d+(\.\d+)?$/.test(v)) v = Number(v)
     data[key] = v
   }
-  return { data, body }
+  return { data, body: text.slice(m[0].length) }
 }
-
-// ── marked 配置:h2/h3 标题加 id(同 marked 默认 slugger) ──
-const renderer = new marked.Renderer()
-const origH = { h2: renderer.heading.bind(renderer), h3: renderer.heading.bind(renderer) }
-function slugger() {
-  // marked v18 内置 slugger,直接用 Renderer 的 heading 会自动加 id
-  return null
-}
-// 用默认 renderer 即可,marked 默认会给 heading 加 id。
 
 function ghHeaders(extra = {}) {
   const h = { Accept: 'application/vnd.github+json', ...extra }
@@ -99,16 +93,15 @@ function estimateReadingTime(text) {
   return minutes
 }
 
-// ── 从渲染后的 HTML 提取 toc(h2 + h3) ──
+// ── 提取 h2/h3 时的 id 提取正则(匹配带 id 属性的 h2/h3) ──
 function extractToc(html) {
   const toc = []
-  // 简化正则,匹配 <h2 id="...">…</h2> 和 <h3 id="...">…</h3>
-  const re = /<h([23])\s+id="([^"]+)"[^>]*>(.*?)<\/h\1>/g
+  // 匹配 <h2 id="...">...</h2> 和 <h3 id="...">...</h3>
+  const re = /<h([23])\s+id="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g
   let m
   while ((m = re.exec(html)) !== null) {
     const level = Number(m[1])
     const id = m[2]
-    // 去掉内联标签,只保留文本
     const text = m[3].replace(/<[^>]+>/g, '').trim()
     toc.push({ level, id, text })
   }
@@ -116,8 +109,26 @@ function extractToc(html) {
 }
 
 // ── 把正文渲染成 HTML(供 toc 提取;真正的渲染在详情页客户端做) ──
+//   marked v18 默认不给 heading 加 id,这里用 Marked 实例 + 自定义 renderer
+//   把 h2/h3 包装为 <h2 id="原文">…</h2>,这样 toc 才有错、详情页错点能跳转
+// 注意:marked v18 的命名导出是 `Marked`(大写),用 `import { Marked }` 拿类,
+// `import { marked }` 拿不到 → new marked.Marked() 会抛异步 import 错误。
+const md = new Marked()
+md.use({
+  gfm: true,
+  renderer: {
+    heading({ tokens, depth }) {
+      const text = this.parser.parseInline(tokens)
+      const id = tokens
+        .map((t) => (t.text !== undefined ? t.text : ''))
+        .join('')
+        .trim()
+      return `<h${depth} id="${id}">${text}</h${depth}>\n`
+    },
+  },
+})
 function renderTocFromBody(body) {
-  const html = marked.parse(body)
+  const html = md.parse(body)
   return extractToc(html)
 }
 
