@@ -1,10 +1,9 @@
 /**
  * 主题切换按钮 — 导航栏右上角
- * - 三态循环:system → light → dark → system
- * - 图标随状态变化
- *   - system:显示器图标(半个太阳/月亮)
- *   - light :太阳
- *   - dark  :月亮
+ * - 两态循环:light → dark → light
+ * - 图标:
+ *   - light:太阳(提示"点击切到深色")
+ *   - dark :月亮(提示"点击切到浅色")
  * - 持久化由 ThemeContext 处理
  */
 import { useTheme } from '../context/ThemeContext.jsx'
@@ -22,31 +21,22 @@ const MoonIcon = () => (
   </svg>
 )
 
-const SystemIcon = () => (
-  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <rect x="2" y="4" width="20" height="14" rx="2" />
-    <path d="M8 21h8M12 18v3" />
-  </svg>
-)
-
-const LABEL = {
-  system: '跟随系统',
-  light: '浅色',
-  dark: '深色'
-}
+const LABEL = { light: '浅色', dark: '深色' }
 
 export default function ThemeToggle() {
-  const { theme, cycleTheme, resolved } = useTheme()
-  const Icon = theme === 'light' ? SunIcon : theme === 'dark' ? MoonIcon : SystemIcon
-  const label = `${LABEL[theme]}(当前${LABEL[resolved]})`
+  const { theme, cycleTheme } = useTheme()
+  // 始终显示"当前模式"的图标
+  const Icon = theme === 'light' ? SunIcon : MoonIcon
+  const next = theme === 'light' ? '深色' : '浅色'
+  const title = `当前${LABEL[theme]} · 点击切换到${next}`
 
   return (
     <button
       type="button"
       className="nav-theme-btn"
       onClick={cycleTheme}
-      title={label}
-      aria-label={label}
+      title={title}
+      aria-label={title}
     >
       <Icon />
     </button>

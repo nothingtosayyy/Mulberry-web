@@ -1,19 +1,20 @@
 /**
  * 动画配置中心 — 用户可在这里直接调整 WebGL 动画参数
  *
- * 每个 get*Config 函数根据当前主题('dark' | 'light')返回对应主题下的动画 props。
- * 主题切换时,FaultyTerminal / Dither 会自动用对应主题的配置。
+ * 设计原则:
+ *   - Hero 区(整个 .hero section + 顶栏)始终保持深色模式下的样子,
+ *     所以 Hero 动画色 **不随主题变化**,始终是 Mulberry 紫。
+ *   - About 页内容区随主题切换,所以 Dither 动画色根据主题切换。
  *
  * 调整指引:
- *   - tint / waveColor: 主题色,直接改十六进制 / RGB 三元组即可
- *   - 其他参数(noise / dither / glitch 等)跟主题无关,只跟"风格"有关
- *   - 想要 dark/light 不同的参数?在对应分支里覆盖
+ *   - Hero:改 HERO_BASE 常量即可,两态不区分
+ *   - About:ABOUT_DITHER_DARK / ABOUT_DITHER_LIGHT 各自独立调
  */
 import { useTheme } from '../context/ThemeContext.jsx'
 
 // ── Hero 区 FaultyTerminal 配置 ────────────────────────────
-// 深色模式:Mulberry 主题紫
-const HERO_DARK = {
+// Hero 区始终深色局部卡片 → 动画色不随主题变化,统一 Mulberry 紫
+const HERO_BASE = {
   scale: 1,                    // 整体图案缩放
   gridMul: [2, 1],             // 网格密度 [x, y]
   digitSize: 1.4,              // 单个数字字符大小
@@ -25,7 +26,7 @@ const HERO_DARK = {
   chromaticAberration: 0,      // 色差偏移
   dither: 1,                   // 抖色强度
   curvature: 1,                // 桶形畸变
-  tint: '#7938eb',             // ★ 主色调(深色=Mulberry 紫)
+  tint: '#7938eb',             // ★ 主色调:始终 Mulberry 紫
   mouseReact: false,           // 鼠标互动(关=省 GPU)
   mouseStrength: 1,
   pageLoadAnimation: true,     // 加载时逐格入场动画
@@ -33,24 +34,17 @@ const HERO_DARK = {
   dpr: 1                       // 设备像素比锁 1x
 }
 
-// 亮色模式:Hero 区仍是深色背景,动画色改白色
-const HERO_LIGHT = {
-  ...HERO_DARK,
-  tint: '#ffffff'              // ★ 亮色模式=白色
-}
-
 /**
  * Hero 动画 props hook
- *  - 主题切换时返回对应配置
+ *  - 不依赖 theme:Hero 区视觉始终深色,动画色也始终紫色
  *  - 单一来源:Hero.jsx 不再硬编码任何动画参数
  */
 export function useHeroAnimationProps() {
-  const { resolved } = useTheme()
-  return resolved === 'light' ? HERO_LIGHT : HERO_DARK
+  return HERO_BASE
 }
 
 // ── About 区 Dither 配置 ──────────────────────────────────
-// 深色模式:Mulberry 紫
+// About 页内容区随主题切换,Dither 动画色也跟着切
 const ABOUT_DITHER_DARK = {
   waveColor: [0.475, 0.219, 0.922],  // RGB 0-1,Mulberry 紫 #7938eb
   disableAnimation: false,
@@ -63,8 +57,7 @@ const ABOUT_DITHER_DARK = {
   pixelSize: 2
 }
 
-// 亮色模式:用户没明确要求改,这里保守用白色 —
-// (亮色背景上紫色 Bayer 抖动几乎看不见,白色对比最强)
+// 亮色模式:白底上紫色 Bayer 矩阵几乎看不见,白色对比最强
 const ABOUT_DITHER_LIGHT = {
   ...ABOUT_DITHER_DARK,
   waveColor: [1, 1, 1]                // ★ 亮色模式=白色
@@ -72,8 +65,9 @@ const ABOUT_DITHER_LIGHT = {
 
 /**
  * About 页 Dither 动画 props hook
+ *  - 跟随整站主题
  */
 export function useDitherAnimationProps() {
-  const { resolved } = useTheme()
-  return resolved === 'light' ? ABOUT_DITHER_LIGHT : ABOUT_DITHER_DARK
+  const { theme } = useTheme()
+  return theme === 'light' ? ABOUT_DITHER_LIGHT : ABOUT_DITHER_DARK
 }

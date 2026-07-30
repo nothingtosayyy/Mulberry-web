@@ -56,7 +56,7 @@
   /* 滚动条 */
   --scrollbar-hover: #333333;
 
-  /* Hero 区:深色背景 + 浅色前景(两个模式都保持,因为动画是浅色水印) */
+  /* Hero 区:深色背景 + 浅色前景(主题无关,两个模式都保持深色局部卡片) */
   --hero-overlay-1: rgba(10, 10, 10, 0.55);
   --hero-overlay-2: rgba(10, 10, 10, 0.25);
   --hero-overlay-3: rgba(10, 10, 10, 0.60);
@@ -64,6 +64,15 @@
   --hero-fg: var(--fg);
   --shadow-text-strong: rgba(0, 0, 0, 0.45);
   --shadow-text-soft: rgba(0, 0, 0, 0.50);
+
+  /* 顶栏 + Hero 区专用:主题无关,深色模式下的样子 */
+  --surface-always: #0a0a0a;
+  --fg-always: #f0f0f0;
+  --fg-muted-always: #a0a0a0;
+  --border-always: rgba(255, 255, 255, 0.08);
+  --border-strong-always: rgba(255, 255, 255, 0.12);
+  --hover-bg-soft-always: rgba(255, 255, 255, 0.04);
+  --hover-border-always: rgba(255, 255, 255, 0.25);
 
   /* 字体 */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
@@ -118,6 +127,8 @@
 
   --shadow-text-strong: rgba(0, 0, 0, 0.30);
   --shadow-text-soft: rgba(0, 0, 0, 0.35);
+
+  /* 顶栏 + Hero 的主题无关深色 token:light 模式下也不覆盖,始终深色 */
 }
 
 html {

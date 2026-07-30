@@ -6,15 +6,14 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>桑葚集</title>
     <!-- 防闪烁:React 挂载前同步读 localStorage 解析 theme,设到 <html data-theme>
-         必须放在最顶部,且用同步 JS。React 后置设置会闪一下深色再切到亮色。 -->
+         必须放在最顶部,且用同步 JS。React 后置设置会闪一下深色再切到亮色。
+         两态:light | dark,默认 dark。 -->
     <script>
       (function () {
         try {
-          var stored = localStorage.getItem('mulberry-theme-v1') || 'system';
-          var resolved = stored === 'system'
-            ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
-            : stored;
-          document.documentElement.setAttribute('data-theme', resolved);
+          var stored = localStorage.getItem('mulberry-theme-v1');
+          var theme = (stored === 'light' || stored === 'dark') ? stored : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
         } catch (e) {
           document.documentElement.setAttribute('data-theme', 'dark');
         }

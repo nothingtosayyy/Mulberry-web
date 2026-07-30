@@ -10,8 +10,10 @@
   left: 0;
   right: 0;
   height: var(--nav-height);
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  /* 顶栏始终保持深色模式下的样子,不管 light/dark */
+  background: var(--surface-always);
+  color: var(--fg-always);
+  border-bottom: 1px solid var(--border-always);
   display: flex;
   align-items: center;
   padding: 0 32px;
@@ -28,7 +30,7 @@
 .nav-logo {
   font-size: 15px;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--fg-always);
   letter-spacing: -0.01em;
   white-space: nowrap;
   text-decoration: none;
@@ -53,7 +55,7 @@
 
 .nav-link {
   font-size: 13px;
-  color: var(--fg-muted);
+  color: var(--fg-muted-always);
   padding: 6px 14px;
   border-radius: var(--radius-sm);
   transition: color 0.15s, background 0.15s;
@@ -62,8 +64,8 @@
 }
 
 .nav-link:hover {
-  color: var(--fg);
-  background: var(--hover-bg-soft);
+  color: var(--fg-always);
+  background: var(--hover-bg-soft-always);
 }
 
 .nav-link--purple {
@@ -87,18 +89,18 @@
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--border-strong-always);
   border-radius: var(--radius-sm);
   font-size: 13px;
-  color: var(--fg-muted);
+  color: var(--fg-muted-always);
   transition: color 0.15s, border-color 0.15s, background 0.15s;
   letter-spacing: 0.01em;
 }
 
 .nav-gh-btn:hover {
-  color: var(--fg);
-  border-color: var(--hover-border);
-  background: var(--hover-bg-soft);
+  color: var(--fg-always);
+  border-color: var(--hover-border-always);
+  background: var(--hover-bg-soft-always);
 }
 
 .nav-gh-btn svg {
@@ -127,15 +129,15 @@
   width: 30px;
   height: 30px;
   border-radius: var(--radius-sm);
-  color: var(--fg-muted);
-  border: 1px solid var(--border-strong);
+  color: var(--fg-muted-always);
+  border: 1px solid var(--border-strong-always);
   background: transparent;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
   flex-shrink: 0;
 }
 
 .nav-theme-btn:hover {
-  color: var(--fg);
-  border-color: var(--hover-border);
-  background: var(--hover-bg-soft);
+  color: var(--fg-always);
+  border-color: var(--hover-border-always);
+  background: var(--hover-bg-soft-always);
 }

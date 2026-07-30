@@ -9,10 +9,13 @@
   margin-top: var(--nav-height);
   display: flex;
   min-height: 420px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-always);
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  /* Hero 区始终保持深色模式下的样子,不管 light/dark */
+  background: var(--surface-always);
+  color: var(--fg-always);
 }
 
 /* ── 背景层(FaultyTerminal)────────────────── */
@@ -55,8 +58,8 @@
   line-height: 1.15;
   letter-spacing: -0.025em;
   margin-bottom: 20px;
-  color: var(--fg);
-  text-shadow: 0 2px 12px var(--shadow-text-strong);
+  color: var(--fg-always);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
 }
 
 /* TextType 包裹 hero-headline 时需作为块级元素(默认 inline-block) */
@@ -78,10 +81,10 @@
 .hero-sub {
   font-size: 14px;
   line-height: 1.65;
-  color: var(--fg-muted);
+  color: var(--fg-muted-always);
   margin-bottom: 6px;
   max-width: 420px;
-  text-shadow: 0 1px 6px var(--shadow-text-soft);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 
 .hero-ctas {
@@ -126,18 +129,19 @@
 }
 
 .btn-outline {
-  border: 1px solid var(--border-strong);
-  color: var(--fg);
+  border: 1px solid var(--border-strong-always);
+  color: var(--fg-always);
 }
 
 .btn-outline:hover {
-  border-color: var(--hover-border);
-  background: var(--hover-bg-subtle);
+  border-color: var(--hover-border-always);
+  background: var(--hover-bg-soft-always);
 }
 
 .btn-white {
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-fg);
+  /* Hero 区按钮始终保持深色模式下的样子(白底深字) */
+  background: #ffffff;
+  color: #111111;
   font-weight: 500;
   border-radius: var(--radius-pill);
   padding: 10px 22px;
@@ -145,5 +149,5 @@
 }
 
 .btn-white:hover {
-  background: var(--btn-primary-hover);
+  background: #e8e8e8;
 }
