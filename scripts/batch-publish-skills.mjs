@@ -119,7 +119,39 @@ function injectMulberryMeta(originalText, { cat, slug, color, logo, date }) {
   return `---\n${metaLines.join('\n')}\n${preserved.length ? '\n' + preserved.join('\n') + '\n' : ''}---\n\n${body.trim()}\n`
 }
 
+// Quality Gate (Step 3.5): 产出后做 4 项检查, 任一不通过立即跳出
+const DESIGN_TEMPLATE_HINTS = ['色板', '字体规则', '按钮', '卡片', '布局原则', "Do's", "Don't", '设计哲学']
+function validate({ srcText, outText }) {
+  const issues = []
+  const { body: srcBody } = parseFrontmatter(srcText)
+  const { body: outBody } = parseFrontmatter(outText)
+
+  // 1. 源文件 body 长度 ≥ 100 字符
+  if (srcBody.trim().length < 100) {
+    issues.push(`源文件 body 过短 (${srcBody.trim().length} 字符), 不该上传`)
+  }
+  // 2. 产物 body 长度 ≥ 源 body 长度 (注入过程不能丢内容)
+  if (outBody.trim().length < srcBody.trim().length) {
+    issues.push(`产物 body 变短 (${srcBody.trim().length} → ${outBody.trim().length}), 注入过程可能丢内容`)
+  }
+  // 3. 产物 body 不含 7 章节设计模板特征串 (避免重蹈反例 1)
+  const hits = DESIGN_TEMPLATE_HINTS.filter((h) => outBody.includes(h))
+  if (hits.length >= 3) {
+    issues.push(`产物 body 命中 ${hits.length} 个设计模板特征串 [${hits.join(', ')}], 可能是“设计系统速查”模板污染`)
+  }
+  // 4. frontmatter 包含所有 7 个 mulberry 字段
+  const required = ['name', 'slug', 'cat', 'desc', 'color', 'logo', 'date']
+  const fm = parseFrontmatter(outText).data
+  const missing = required.filter((k) => fm[k] === undefined || fm[k] === '')
+  if (missing.length) {
+    issues.push(`frontmatter 缺字段: ${missing.join(', ')}`)
+  }
+
+  return issues
+}
+
 let count = 0
+let failed = 0
 for (const s of skills) {
   const srcPath = join(SRC, s.src)
   const destDir = join(REPO, s.cat, s.slug)
@@ -143,10 +175,21 @@ for (const s of skills) {
   const logo = (name.toString().replace(/^[\s-]+/, ''))[0] || s.slug[0]
 
   const out = injectMulberryMeta(original, { cat: s.cat, slug: s.slug, color: s.color, logo, date: today })
+
+  // Quality Gate (Step 3.5)
+  const issues = validate({ s, srcText: original, outText: out })
+  if (issues.length) {
+    failed++
+    console.error(`✗ ${s.cat}/${s.slug} ← ${s.src}`)
+    for (const issue of issues) console.error(`   - ${issue}`)
+    continue
+  }
+
   await writeFile(destPath, out, 'utf8')
 
   count++
   console.log(`✓ ${s.cat}/${s.slug} ← ${s.src}`)
 }
 
-console.log(`\nDONE: ${count} skills copied (as SKILL.md)`)
+console.log(`\nDONE: ${count} skills copied (as SKILL.md)${failed ? `, ${failed} failed quality gate` : ''}`)
+if (failed) process.exit(1)

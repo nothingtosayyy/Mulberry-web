@@ -101,6 +101,12 @@ description: 将用户提供的 skill 文档(SKILL.md)原样写入 mulberry 个�
 
 把源文件原样复制到 `data-repo/<cat>/<slug>/SKILL.md`,在 frontmatter 头部**追加** mulberry 字段。
 
+**铁律(违反任何一条 = 视为生产事故)**:
+
+- 原文件的 body **逐字复制**,不得总结、不得改写、不得补“使用方式”段落、不得套用任何模板。
+- 不管 skill 主题是什么(PRD 生成 / 竞品分析 / 财务报销 / 需求评审 / ...),**一律只保留它原本的 body**。不要因为“感觉上 PRD 类 skill 需要补充结构”就生成额外章节。
+- 如果源文件 body 为空 / 只有 frontmatter / 只有一句话,**停下来问用户**:这个 skill 本身是否完整?不完整就不要上传,反例是"1 行 description + 30 行设计系统模板"的伪 skill。
+
 **frontmatter 注入规则**:
 1. 若源文件**无** frontmatter(没有 `---` 包裹),直接生成 `---\nname: <name>\nslug: <slug>\ncat: <cat>\ndesc: <desc>\nsource: <source 或留空>\ncolor: "<color>"\nlogo: "<logo>"\ndate: <YYYY-MM-DD>\n---\n\n<body>`
 2. 若源文件**有** frontmatter,保留所有原字段(如 `description`、`name_zh`、`name_en`、`argument-hint`、`install_source` 等),**只在 mulberry 核心字段缺失时补全**。生成的字段顺序:`name` / `slug` / `cat` / `desc` / `source` / `color` / `logo` / `date`(参考 `scripts/batch-publish-skills.mjs` 的 `injectMulberryMeta` 实现)
@@ -108,7 +114,18 @@ description: 将用户提供的 skill 文档(SKILL.md)原样写入 mulberry 个�
 
 **清理遗留文件**:`data-repo/<cat>/<slug>/` 下若还有 `README.md` / `DESIGN.md`,**删除**。
 
-> 反例:不要像本 skill 早期版本那样给所有 skill 生成"设计系统速查"7 章节模板。Skill 内容**不应当是 design 相关的**,按 skill 自己的主题来。
+### Step 3.5:空模板自检闸门(Quality Gate)
+
+写入 `data-repo/<cat>/<slug>/SKILL.md` 后,**必须**执行以下检查。任何一项不通过都**不要 push**,先回去修。
+
+| 检查项 | 通过条件 | 不通过的典型症状 |
+|---|---|---|
+| 源文件 body 长度 ≥ 100 字符 | `sourceText.split('---').slice(2).join('---').trim().length >= 100` | 源本身就是空壳,不该上传 |
+| 产物 body 长度 ≥ 源 body 长度 | `outBody.length >= sourceBody.length` | 注入过程中误删了内容 |
+| 产物 body 不含 7 章节设计模板特征串 | 不出现同时 ≥ 3 个:`“色板”` `“字体规则”` `“按钮”` `“卡片”` `“布局原则”` `“Do's”` `“Don't”` `“设计哲学”` | 不知从哪里又套上了设计模板 |
+| frontmatter 包含所有 7 个 mulberry 字段 | `name` `slug` `cat` `desc` `color` `logo` `date` 都存在 | 字段缺失导致首页卡片渲染异常 |
+
+> 闸门可以脚本化(`scripts/batch-publish-skills.mjs` 末尾可加 `validate(outDir)` 调用),本 skill 手动检查时至少要过表里前 3 行。
 
 ### Step 4:写入本地 data-repo
 
@@ -205,7 +222,6 @@ npx vercel --prod --yes
 ## Notes
 
 - **数据仓库 vs 站点仓库**:用户可能混淆。本 skill 操作的是**数据仓库**(`Mulberry-SKILL`),只在 Step 6 才碰站点仓库(`Mulberry-web`)。Vercel 域名是 mulberrytian.vercel.app。
-- **不写"设计模板"**:早期版本(2026-07-29 之前)给所有 skill 生成"设计系统速查"7 章节模板(包括 PRD 生成、竞品分析等非设计类 skill),导致详情页全是死内容。**新规约(2026-07-30)改为单文件 SKILL.md 原样保留**。
 - **冲突处理**:若 `data-repo/<cat>/<slug>/` 已存在,**先停**,问用户是要覆盖 / 跳过 / 改 slug。
 - **categories.json**:**不自动改**。若新 skill 不属于现有分类,提示用户先手动加新分类。
 - **回滚**:
@@ -217,3 +233,19 @@ npx vercel --prod --yes
   - "把这段文字整理成 skill.md" — 整理完即可,不要触发上传
   - "看看 Mulberry 上有什么 skill" — 只读,不触发
   - "改一下这个 skill 的描述" — 应当用"修改现有 skill"流程(本 skill 是"新增"流程,改用编辑模式)
+
+## Anti-Patterns(反面案例, 避免重蹈覆辙)
+
+### 反例 1:给所有 skill 套“设计系统速查”模板 (2026-07-29 事故)
+
+- **表现**: 之前用 `batch-generate-skills.mjs` 批量上传 20 个 skill(PRD 生成 / 竞品分析 / 需求分析 / 原型工厂 / ...),脚本里有一个 `TPL_DESIGN` 模板,只对模板中的 `Skill Name` / 品牌色做字面替换。
+- **后果**: 详情页全部显示同一份“UI 设计 — 设计系统速查”内容(色板 / 字体 / 按钮 / 卡片 / 布局原则 / Do's / Don'ts),原有 skill 内容(PRD 模板、SWOT 分析、RICE 框架...)全部丢失。
+- **根因**: 本 skill 早期版本要求生成 `README.md + DESIGN.md` 双文件,试图把所有 skill 统一接到“设计系统”这个抽象概念上,结果把与设计无关的 skill 也掉了设计外壳。
+- **修复后规约(2026-07-30+)**: 废除 `DESIGN.md` 概念,全部改为单文件 `SKILL.md` 原样保留;Step 3 设了 3 条铁律,Step 3.5 加了 4 项 Quality Gate。
+
+### 反例 2:脚本自动生成的"伪 skill"(空 frontmatter + 一句话)
+
+- **表现**: 脚本里只填了 `name/slug/desc/color`,body 是一句“使用方式”介绍。
+- **后果**: 首页能列出,详情页只显示一行字,没有实质内容。
+- **避免**: Step 3 铁律第三条已明确要求 — 源文件 body 为空 / 只有 frontmatter / 只有一句话时,**停下来问用户**。
+
