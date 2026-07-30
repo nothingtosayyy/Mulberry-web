@@ -22,25 +22,36 @@ export default function Hero() {
 
   return (
     <section className="hero" data-component="hero" ref={sectionRef}>
-      {/* 实验性 WebGL 背景 — Mulberry 主题紫 */}
+      {/* 实验性 WebGL 背景 — Mulberry 主题紫
+          性能优先参数(v0.1.5):
+          - dpr={1}              : 锁 1x,Retina/2K 屏上单帧像素 -75%
+          - chromaticAberration=0: 关闭 R/B 额外 getColor,单帧 -36%
+          - noiseAmp=0           : 关闭 FBM 噪声振幅
+          - flickerAmount=0.3    : 降低 onOff 重算
+          - glitchAmount=0.5     : 降低 displace 计算
+          - curvature=0          : 关闭 barrel 桶形畸变
+          - gridMul=[1,1]        : 单元格密度减半
+          - pageLoadAnimation=false: 关闭逐格入场动画
+      */}
       <div className="hero-bg" aria-hidden="true">
         <FaultyTerminal
-          scale={1.2}
-          gridMul={[2, 1]}
+          scale={1.0}
+          gridMul={[1, 1]}
           digitSize={1.4}
           timeScale={0.5}
           scanlineIntensity={0.3}
-          glitchAmount={1}
-          flickerAmount={1}
-          noiseAmp={0.7}
-          chromaticAberration={0.3}
+          glitchAmount={0.5}
+          flickerAmount={0.3}
+          noiseAmp={0}
+          chromaticAberration={0}
           dither={0}
-          curvature={0.3}
+          curvature={0}
           tint="#7938eb"
           mouseReact={false}
           mouseStrength={1}
-          pageLoadAnimation={true}
+          pageLoadAnimation={false}
           brightness={1}
+          dpr={1}
         />
       </div>
       {/* 顶部深色遮罩,让前景文字更易读 */}
