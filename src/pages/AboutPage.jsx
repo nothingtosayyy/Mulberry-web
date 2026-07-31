@@ -48,33 +48,49 @@ export default function AboutPage() {
     setDays(daysSinceLaunch())
   }, [])
 
-  // 站点统计(复用 Turso):mount 时计入一次,弹窗打开时重新拉取
-  // - sitePv:站点总 PV(独立计数,存在 site_stats 表)
-  // - pagePv:本页(about) PV(复用 article_views,'about' 作为特殊 slug)
-  // - siteUv:暂未接入,UI 上明标"暂未接入"(不假造数据)
-  // - 'loading' 状态(默认):占位骨架
-  // - 数字:就绪
-  // - 'error' 状态:拉取 / 未配置失败,显式提示(不静默)
+  // 8 项统计指标(全部接入,不留 TODO):
+  //   site:今日 PV / 今日 UV / 本站 PV / 本站 UV
+  //   page:今日本页 PV / 今日本页 UV / 本页 PV / 本页 UV
+  // 状态: 'loading' → 数字 → 'error'
+  // 来自两个 endpoint: /api/stats/site (site) + /api/views/about (page)
   const [sitePv, setSitePv] = useState('loading')
+  const [siteUv, setSiteUv] = useState('loading')
+  const [todayPv, setTodayPv] = useState('loading')
+  const [todayUv, setTodayUv] = useState('loading')
   const [pagePv, setPagePv] = useState('loading')
+  const [pageUv, setPageUv] = useState('loading')
+  const [todayPagePv, setTodayPagePv] = useState('loading')
+  const [todayPageUv, setTodayPageUv] = useState('loading')
 
-  // mount:自增 + 拿到首次值
+  // mount:两个 endpoint 各 POST 一次,带回全部 8 项指标
   useEffect(() => {
     fetch('/api/stats/site', { method: 'POST' })
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => {
-        if (j && typeof j.pv === 'number') setSitePv(j.pv)
-        else setSitePv('error')
+        if (j && j.configured) {
+          setSitePv(typeof j.sitePv === 'number' ? j.sitePv : 'error')
+          setSiteUv(typeof j.siteUv === 'number' ? j.siteUv : 'error')
+          setTodayPv(typeof j.todayPv === 'number' ? j.todayPv : 'error')
+          setTodayUv(typeof j.todayUv === 'number' ? j.todayUv : 'error')
+        } else {
+          setSitePv('error'); setSiteUv('error'); setTodayPv('error'); setTodayUv('error')
+        }
       })
-      .catch(() => setSitePv('error'))
+      .catch(() => { setSitePv('error'); setSiteUv('error'); setTodayPv('error'); setTodayUv('error') })
 
     fetch('/api/views/about', { method: 'POST' })
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => {
-        if (j && typeof j.views === 'number') setPagePv(j.views)
-        else setPagePv('error')
+        if (j && j.configured) {
+          setPagePv(typeof j.views === 'number' ? j.views : 'error')
+          setPageUv(typeof j.uv === 'number' ? j.uv : 'error')
+          setTodayPagePv(typeof j.todayViews === 'number' ? j.todayViews : 'error')
+          setTodayPageUv(typeof j.todayUv === 'number' ? j.todayUv : 'error')
+        } else {
+          setPagePv('error'); setPageUv('error'); setTodayPagePv('error'); setTodayPageUv('error')
+        }
       })
-      .catch(() => setPagePv('error'))
+      .catch(() => { setPagePv('error'); setPageUv('error'); setTodayPagePv('error'); setTodayPageUv('error') })
   }, [])
 
   // 彩蛋:连点 3 次作者名 → 弹窗
@@ -112,13 +128,23 @@ export default function AboutPage() {
     fetch('/api/stats/site')
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => {
-        if (!cancelled && j && typeof j.pv === 'number') setSitePv(j.pv)
+        if (!cancelled && j && j.configured) {
+          setSitePv(typeof j.sitePv === 'number' ? j.sitePv : 'error')
+          setSiteUv(typeof j.siteUv === 'number' ? j.siteUv : 'error')
+          setTodayPv(typeof j.todayPv === 'number' ? j.todayPv : 'error')
+          setTodayUv(typeof j.todayUv === 'number' ? j.todayUv : 'error')
+        }
       })
       .catch(() => {})
     fetch('/api/views/about')
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => {
-        if (!cancelled && j && typeof j.views === 'number') setPagePv(j.views)
+        if (!cancelled && j && j.configured) {
+          setPagePv(typeof j.views === 'number' ? j.views : 'error')
+          setPageUv(typeof j.uv === 'number' ? j.uv : 'error')
+          setTodayPagePv(typeof j.todayViews === 'number' ? j.todayViews : 'error')
+          setTodayPageUv(typeof j.todayUv === 'number' ? j.todayUv : 'error')
+        }
       })
       .catch(() => {})
     return () => {
@@ -200,18 +226,42 @@ export default function AboutPage() {
           >
             <h3 className="about-modal-title">站点访问统计</h3>
             <ul className="about-modal-list">
+              <li className="about-modal-group-label">
+                <span>今日</span>
+              </li>
               <li className="about-modal-item">
-                <span>站点 PV</span>
+                <span>今日总访问量</span>
+                <strong>{renderStat(todayPv)}</strong>
+              </li>
+              <li className="about-modal-item">
+                <span>今日总访客数</span>
+                <strong>{renderStat(todayUv)}</strong>
+              </li>
+
+              <li className="about-modal-group-label">
+                <span>本站</span>
+              </li>
+              <li className="about-modal-item">
+                <span>本站总访问量</span>
                 <strong>{renderStat(sitePv)}</strong>
               </li>
               <li className="about-modal-item">
-                <span>站点 UV</span>
-                <strong><span className="about-stat-todo">— 暂未接入</span></strong>
+                <span>本站总访客数</span>
+                <strong>{renderStat(siteUv)}</strong>
+              </li>
+
+              <li className="about-modal-group-label">
+                <span>本页(关于)</span>
               </li>
               <li className="about-modal-item">
-                <span>本页 PV</span>
+                <span>本页总阅读量</span>
                 <strong>{renderStat(pagePv)}</strong>
               </li>
+              <li className="about-modal-item">
+                <span>本页总访客数</span>
+                <strong>{renderStat(pageUv)}</strong>
+              </li>
+
               <li className="about-modal-item about-modal-item--local">
                 <span>已运营</span>
                 <strong>{days} 天</strong>
