@@ -12,6 +12,7 @@
 
 import { Link } from 'react-router-dom'
 import { useArticleIndex } from '../hooks/useArticles.js'
+import SEO from '../components/SEO.jsx'
 import '../styles/word.css'
 
 export default function WordListPage() {
@@ -19,6 +20,11 @@ export default function WordListPage() {
 
   return (
     <main className="word-list-page" data-component="word-list">
+      <SEO
+        title="随笔与想法"
+        description="关于产品、设计、AI 的随笔 — 收录在 GitHub 仓库,数据公开。"
+        url="https://mulberrytian.vercel.app/words"
+      />
       {/* 顶部介绍 */}
       <header className="word-list-hero">
         <h1 className="word-list-title">随笔与想法</h1>

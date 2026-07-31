@@ -19,6 +19,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useArticleDetail, useArticleIndex } from '../hooks/useArticles.js'
 import { ChevronLeftIcon } from '../components/Icon.jsx'
+import MarkdownBody from '../components/MarkdownBody.jsx'
+import SEO from '../components/SEO.jsx'
 import '../styles/word.css'
 
 export default function WordPage() {
@@ -56,6 +58,13 @@ export default function WordPage() {
 
   return (
     <main className="word-detail-page" data-component="word-detail">
+      <SEO
+        title={article?.title || '文章'}
+        description={article?.desc || '随笔与想法'}
+        type="article"
+        url={article ? `https://mulberrytian.vercel.app/word/${article.slug}` : undefined}
+        publishedAt={article?.date ? `${article.date}T00:00:00+08:00` : undefined}
+      />
       {article ? (
         <WordContent article={article} />
       ) : (
@@ -158,10 +167,7 @@ function WordContent({ article }) {
             <p style={{ color: 'var(--fg-dim)' }}>加载失败:{String(error.message || error)}</p>
           )}
           {!loading && !error && data?.html && (
-            <div
-              className="md-body"
-              dangerouslySetInnerHTML={{ __html: data.html }}
-            />
+            <MarkdownBody html={data.html} className="md-body" />
           )}
         </div>
       </article>

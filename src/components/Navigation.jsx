@@ -77,8 +77,8 @@ export default function Navigation() {
                   role="menuitem"
                   onClick={() => setOpen(false)}
                 >
-                  <div className="nav-dropdown-item-title">Skill收藏夹</div>
-                  <div className="nav-dropdown-item-desc">精选网站的设计观察 · 收录于 GitHub</div>
+                  <div className="nav-dropdown-item-title">Skills</div>
+                  <div className="nav-dropdown-item-desc">Skill收藏夹 </div>
                 </Link>
                 <Link
                   to="/words"
@@ -86,8 +86,8 @@ export default function Navigation() {
                   role="menuitem"
                   onClick={() => setOpen(false)}
                 >
-                  <div className="nav-dropdown-item-title">随笔与想法</div>
-                  <div className="nav-dropdown-item-desc">关于产品、设计、AI 的思考</div>
+                  <div className="nav-dropdown-item-title">文章</div>
+                  <div className="nav-dropdown-item-desc">随笔与想法</div>
                 </Link>
               </div>
             </div>

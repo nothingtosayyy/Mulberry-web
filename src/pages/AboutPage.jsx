@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Dither from '../components/Dither.jsx'
 import { useDitherAnimationProps } from '../config/animation.js'
+import SEO from '../components/SEO.jsx'
 import '../styles/about.css'
 
 // 站点上线日期（取自 更新记录.md v0.1.0 + Mulberry-web 仓库 initial commit 0d356b2）
@@ -154,6 +155,11 @@ export default function AboutPage() {
 
   return (
     <main className="about-page">
+      <SEO
+        title="关于"
+        description="桑葚集 是一个能用、好用内容的轻量收藏库,数据公开在 GitHub。"
+        url="https://mulberrytian.vercel.app/about"
+      />
       {/* 左:Dither 动画 */}
       <section className="about-art" aria-hidden="true">
         <Dither {...ditherProps} />

@@ -1,5 +1,6 @@
 import { FileIcon } from './Icon.jsx'
 import { markdownToHtml } from '../data/parser.js'
+import MarkdownBody from './MarkdownBody.jsx'
 import '../styles/detail.css'
 
 /**
@@ -35,7 +36,7 @@ export default function MarkdownPreview({
           )}
           {!loading && !error && (
             // marked 生成的 HTML,内容来自你本人维护的 GitHub 仓库,可信
-            <div dangerouslySetInnerHTML={{ __html: html }} />
+            <MarkdownBody html={html} className="md-body" />
           )}
         </div>
       </div>

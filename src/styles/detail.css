@@ -318,6 +318,160 @@
   font-size: 13px;
 }
 
+/* ── 块级代码块(多行)<pre> ──
+   浏览器默认是浅色背景 + 等宽字体,在 dark mode 下会非常突兀。
+   用 token 重做,light/dark 都能融入主题。 */
+.md-body pre {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--fg);
+  position: relative;
+  scrollbar-width: thin;
+}
+
+/* pre 内的 code 取消行内 code 的 padding/背景/border */
+.md-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* 滚动条主题(webkit)*/
+.md-body pre::-webkit-scrollbar {
+  height: 6px;
+}
+.md-body pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+.md-body pre::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+.md-body pre::-webkit-scrollbar-thumb:hover {
+  background: var(--hover-border);
+}
+
+/* ── 图片 ──
+   暗色模式下不强制反色(用户截图可能含亮色元素,反色后失真),
+   改为加圆角 + 阴影 + 浅色边框,两种主题都好看。 */
+.md-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+/* ── 引用 ── */
+.md-body blockquote {
+  margin: 16px 0;
+  padding: 8px 16px;
+  border-left: 3px solid var(--accent-light);
+  background: var(--accent-bg);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--fg-muted);
+}
+.md-body blockquote p {
+  margin-bottom: 4px;
+  color: var(--fg-muted);
+}
+.md-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── 链接 ── */
+.md-body a {
+  color: var(--accent-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--border-strong);
+  transition: text-decoration-color 0.15s, color 0.15s;
+}
+.md-body a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent-light);
+}
+
+/* ── 水平线 ── */
+.md-body hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 32px 0;
+}
+
+/* ── 删除线 ── */
+.md-body del {
+  color: var(--fg-dim);
+}
+
+/* ── 块级代码复制按钮(右上角浮动)──
+   pre 块默认隐藏,鼠标悬停 pre 时渐显,点过之后显示 ✓ 反馈。 */
+.md-code-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
+  color: var(--fg-dim);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, background 0.15s, border-color 0.15s;
+}
+.md-body pre:hover .md-code-copy,
+.md-code-copy:focus-visible {
+  opacity: 1;
+}
+.md-code-copy:hover {
+  color: var(--fg);
+  background: var(--hover-bg-medium);
+  border-color: var(--hover-border);
+}
+.md-code-copy--ok {
+  color: var(--success);
+  background: var(--surface-3);
+  border-color: var(--success);
+  opacity: 1;
+}
+.md-code-copy-icon,
+.md-code-copy-ok {
+  width: 14px;
+  height: 14px;
+}
+.md-code-copy-ok {
+  display: none;
+}
+.md-code-copy--ok .md-code-copy-icon {
+  display: none;
+}
+.md-code-copy--ok .md-code-copy-ok {
+  display: block;
+}
+
+/* ── 可点击放大的图片 ── */
+.md-zoomable {
+  cursor: zoom-in;
+}
+
 .md-body tbody tr:last-child td {
   border-bottom: none;
 }
