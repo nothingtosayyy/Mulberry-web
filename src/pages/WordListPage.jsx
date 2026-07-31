@@ -21,9 +21,9 @@ export default function WordListPage() {
     <main className="word-list-page" data-component="word-list">
       {/* 顶部介绍 */}
       <header className="word-list-hero">
-        <h1 className="word-list-title">文章</h1>
+        <h1 className="word-list-title">随笔与想法</h1>
         <p className="word-list-sub">
-          Skill 收藏夹与随手记录，权是练笔。
+          随笔与想法
         </p>
       </header>
 

@@ -64,25 +64,32 @@ export default function Navigation() {
           </button>
 
           {open && (
-            <div className="nav-dropdown" role="menu">
-              <Link
-                to="/"
-                className="nav-dropdown-item"
-                role="menuitem"
-                onClick={() => setOpen(false)}
-              >
-                <div className="nav-dropdown-item-title">Skill</div>
-                <div className="nav-dropdown-item-desc">精选网站的设计观察 · 收录于 GitHub</div>
-              </Link>
-              <Link
-                to="/words"
-                className="nav-dropdown-item"
-                role="menuitem"
-                onClick={() => setOpen(false)}
-              >
-                <div className="nav-dropdown-item-title">文章</div>
-                <div className="nav-dropdown-item-desc">关于产品、设计、AI 的思考</div>
-              </Link>
+            <div
+              className="nav-dropdown"
+              role="menu"
+              onMouseEnter={cancelClose}
+              onMouseLeave={scheduleClose}
+            >
+              <div className="nav-dropdown-inner">
+                <Link
+                  to="/"
+                  className="nav-dropdown-item"
+                  role="menuitem"
+                  onClick={() => setOpen(false)}
+                >
+                  <div className="nav-dropdown-item-title">Skill收藏夹</div>
+                  <div className="nav-dropdown-item-desc">精选网站的设计观察 · 收录于 GitHub</div>
+                </Link>
+                <Link
+                  to="/words"
+                  className="nav-dropdown-item"
+                  role="menuitem"
+                  onClick={() => setOpen(false)}
+                >
+                  <div className="nav-dropdown-item-title">随笔与想法</div>
+                  <div className="nav-dropdown-item-desc">关于产品、设计、AI 的思考</div>
+                </Link>
+              </div>
             </div>
           )}
         </div>
