@@ -71,6 +71,24 @@ export const CopyIcon = ({ size = 16 }) => (
   </svg>
 )
 
+export const ShareIcon = ({ size = 14 }) => (
+  <svg {...baseProps(size)} aria-hidden="true">
+    <circle cx="18" cy="5" r="3" />
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="18" cy="19" r="3" />
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+  </svg>
+)
+
+export const RssIcon = ({ size = 14 }) => (
+  <svg {...baseProps(size)} aria-hidden="true">
+    <path d="M4 11a9 9 0 019 9" />
+    <path d="M4 4a16 16 0 0116 16" />
+    <circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none" />
+  </svg>
+)
+
 export const FileIcon = ({ size = 16 }) => (
   <svg {...baseProps(size)} aria-hidden="true">
     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />

@@ -21,6 +21,8 @@ import { useArticleDetail, useArticleIndex } from '../hooks/useArticles.js'
 import { ChevronLeftIcon } from '../components/Icon.jsx'
 import MarkdownBody from '../components/MarkdownBody.jsx'
 import SEO from '../components/SEO.jsx'
+import ShareButton from '../components/ShareButton.jsx'
+import NotFound from './NotFound.jsx'
 import '../styles/word.css'
 
 export default function WordPage() {
@@ -39,21 +41,8 @@ export default function WordPage() {
   }, [slug])
 
   if (index && !article) {
-    return (
-      <main className="word-detail-page">
-        <div className="word-detail-breadcrumb">
-          <button
-            className="word-breadcrumb-link"
-            type="button"
-            onClick={() => navigate('/words')}
-          >
-            <ChevronLeftIcon size={14} />
-            返回文章列表
-          </button>
-        </div>
-        <p className="word-detail-empty">未找到该文章,<Link to="/words" className="link-back">返回列表</Link>。</p>
-      </main>
-    )
+    // 路由匹配但文章不存在 → 走统一 404 + 推荐
+    return <NotFound />
   }
 
   return (
@@ -156,6 +145,8 @@ function WordContent({ article }) {
               <span className="word-detail-views-skel" />
             </span>
           )}
+          <span className="word-detail-meta-spacer" />
+          <ShareButton />
         </div>
 
         {/* 正文 */}

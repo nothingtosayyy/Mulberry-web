@@ -472,6 +472,43 @@
   cursor: zoom-in;
 }
 
+/* ── 分享按钮(文章/技能详情页通用)──
+   右上浮动,跟其他元信息同行;复制成功时变绿勾。 */
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fg-muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.share-button:hover {
+  color: var(--fg);
+  background: var(--hover-bg-soft);
+  border-color: var(--hover-border);
+}
+.share-button--ok {
+  color: var(--success);
+  border-color: var(--success);
+  background: var(--surface-2);
+}
+
+/* meta 行 spacer:把分享按钮推到右侧 */
+.info-meta-spacer,
+.word-detail-meta-spacer {
+  flex: 1;
+  min-width: 0;
+}
+
 .md-body tbody tr:last-child td {
   border-bottom: none;
 }

@@ -83,6 +83,64 @@
   color: var(--accent-text);
 }
 
+/* ── RSS 订阅入口(文章列表底部)──
+   小型提示卡,不抢主体列表的视觉重心。 */
+.word-list-rss {
+  display: flex;
+  gap: 16px;
+  margin-top: 48px;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+
+.word-list-rss-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: var(--accent-bg);
+  color: var(--accent-light);
+}
+
+.word-list-rss-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.word-list-rss-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.word-list-rss-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  margin: 0;
+}
+
+.word-list-rss-link {
+  color: var(--accent-light);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border-strong);
+  transition: text-decoration-color 0.15s, color 0.15s;
+}
+.word-list-rss-link:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent-light);
+}
+
 /* ── 卡片行(列表) ── */
 .word-cards {
   list-style: none;

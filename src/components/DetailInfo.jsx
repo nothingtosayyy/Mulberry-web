@@ -1,6 +1,7 @@
 import { useToast } from '../context/ToastContext.jsx'
 import { copyToClipboard } from '../utils/clipboard.js'
 import { CalendarIcon, FolderIcon, ChevronLeftIcon, CopyIcon } from './Icon.jsx'
+import ShareButton from './ShareButton.jsx'
 import '../styles/detail.css'
 
 /**
@@ -98,6 +99,8 @@ export default function DetailInfo({
               {catLabel}
             </div>
           )}
+          <span className="info-meta-spacer" />
+          <ShareButton />
         </div>
       )}
 

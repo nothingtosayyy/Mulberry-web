@@ -13,6 +13,7 @@
 import { Link } from 'react-router-dom'
 import { useArticleIndex } from '../hooks/useArticles.js'
 import SEO from '../components/SEO.jsx'
+import { RssIcon } from '../components/Icon.jsx'
 import '../styles/word.css'
 
 export default function WordListPage() {
@@ -89,6 +90,28 @@ export default function WordListPage() {
               ))}
             </ul>
           )}
+        </div>
+      </section>
+
+      {/* RSS 订阅入口 */}
+      <section className="word-list-rss" aria-label="RSS 订阅">
+        <div className="word-list-rss-icon" aria-hidden="true">
+          <RssIcon size={20} />
+        </div>
+        <div className="word-list-rss-body">
+          <div className="word-list-rss-title">订阅新文章</div>
+          <p className="word-list-rss-desc">
+            用 RSS 阅读器(Feedly / NetNewsWire / Inoreader 等)可以订阅{' '}
+            <a
+              href="/rss.xml"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="word-list-rss-link"
+            >
+              /rss.xml
+            </a>
+            ,有新文章时自动推送,不用刷网页。
+          </p>
         </div>
       </section>
     </main>

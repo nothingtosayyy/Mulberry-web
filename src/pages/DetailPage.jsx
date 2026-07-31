@@ -3,12 +3,14 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useSkillIndex, useSkillDetail } from '../hooks/useSkillData.js'
 import DetailInfo from '../components/DetailInfo.jsx'
 import MarkdownPreview from '../components/MarkdownPreview.jsx'
+import NotFound from './NotFound.jsx'
 
 /**
  * 详情页
  * - 路由:/skill/:cat/:slug(包含分类以保证 slug 唯一)
  * - 通过 useSkillIndex 找到 Skill 骨架
  * - 再通过 useSkillDetail 拉 README + DESIGN 内容
+ * - 找不到时 → 渲染 NotFound(统一 404 + 推荐体验,而不是平淡"未找到")
  */
 export default function DetailPage() {
   const { cat, slug } = useParams()
@@ -22,15 +24,8 @@ export default function DetailPage() {
   )
 
   if (index && !skill) {
-    return (
-      <main className="page">
-        <section className="module module--info">
-          <p className="info-desc">
-            未找到该 Skill,<Link to="/" className="link-back">返回首页</Link>。
-          </p>
-        </section>
-      </main>
-    )
+    // 路由匹配但 Skill 不存在 → 走统一 404 + 推荐
+    return <NotFound />
   }
 
   return (
