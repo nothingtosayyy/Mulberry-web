@@ -15,7 +15,7 @@
  *   - 锚点数据来自 articles.json.toc(构建时从 h2/h3 提取,marked 默认 slugger)
  */
 
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useArticleDetail, useArticleIndex } from '../hooks/useArticles.js'
 import { ChevronLeftIcon } from '../components/Icon.jsx'
@@ -70,6 +70,29 @@ export default function WordPage() {
 function WordContent({ article }) {
   const { loading, error, data } = useArticleDetail({ path: article.path })
 
+  // 阅读数:同会话只 +1,避免刷新暴增
+  const [views, setViews] = useState(null)
+  const countedRef = useRef(false)
+
+  useEffect(() => {
+    if (countedRef.current) return
+    const key = `mulberry:viewed:${article.slug}`
+    if (sessionStorage.getItem(key) === '1') {
+      // 本会话已计过,只读不增
+      fetch(`/api/views/${encodeURIComponent(article.slug)}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j) => j && setViews(j.views))
+        .catch(() => {})
+      return
+    }
+    countedRef.current = true
+    sessionStorage.setItem(key, '1')
+    fetch(`/api/views/${encodeURIComponent(article.slug)}`, { method: 'POST' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => j && setViews(j.views))
+      .catch(() => {})
+  }, [article.slug])
+
   return (
     <div className="word-detail-grid">
       {/* 主体 */}
@@ -98,6 +121,12 @@ function WordContent({ article }) {
             <span className="word-detail-meta-sep">·</span>
           )}
           {article.readingTime && <span>{article.readingTime} min read</span>}
+          {(article.readingTime || article.date) && views !== null && (
+            <span className="word-detail-meta-sep">·</span>
+          )}
+          {views !== null && (
+            <span className="word-detail-views">{views.toLocaleString()} 次阅读</span>
+          )}
         </div>
 
         {/* 正文 */}
