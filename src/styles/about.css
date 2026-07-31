@@ -132,26 +132,127 @@
   color: var(--fg-dim);
 }
 
-/* ── 数据行:不蒜子 PV + 运营天数(放在作者之后、footer 之前) ── */
-.about-stats {
+/* ── 隐藏彩蛋:作者名看起来是文字,其实是 button(连点 3 次触发弹窗) ── */
+.about-author-name {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.about-author-name:hover {
+  color: var(--accent-light);
+}
+.about-author-name:focus-visible {
+  outline: 1px dashed var(--accent-light);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── 全量统计弹窗 ── */
+.about-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 24px;
-  font-size: 13px;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: about-modal-fade 0.15s ease-out;
+}
+
+@keyframes about-modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes about-modal-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.about-modal {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 28px;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  color: var(--fg);
+  animation: about-modal-pop 0.18s ease-out;
+}
+
+.about-modal-title {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
   color: var(--fg-dim);
-  font-variant-numeric: tabular-nums;
+  margin-bottom: 18px;
+}
+
+.about-modal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about-modal-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 14px;
+  color: var(--fg-muted);
   letter-spacing: 0.01em;
 }
 
-.about-stats-sep {
-  opacity: 0.4;
-}
-
-.about-stats #busuanzi_value_site_pv {
-  color: var(--fg-muted);
+.about-modal-item strong {
+  color: var(--fg);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+  font-size: 15px;
+}
+
+.about-modal-item--local {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+
+.about-modal-close {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+  padding: 6px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.about-modal-close:hover {
+  color: var(--fg);
+  border-color: var(--border-strong);
+  background: var(--hover-bg-soft);
+}
+
+.about-modal-close:focus-visible {
+  outline: 1px dashed var(--accent-light);
+  outline-offset: 2px;
 }
 
 /* ── 响应式:窄屏改为上下布局(动画在上,内容在下) ── */

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Dither from '../components/Dither.jsx'
 import { useDitherAnimationProps } from '../config/animation.js'
 import '../styles/about.css'
@@ -13,27 +13,28 @@ function daysSinceLaunch() {
   return Math.max(1, days)
 }
 
+// 连续点击 3 次的时间窗(毫秒)
+const TRIPLE_CLICK_WINDOW_MS = 700
+
 /**
  * 关于页 — 单屏布局
  * - 左侧(50%):Dither WebGL 动画(Mulberry 紫,带鼠标互动)
  * - 中间:1px 垂直分割线
- * - 右侧(50%):站点介绍 + 作者介绍 + 不蒜子 PV / 运营天数
+ * - 右侧(50%):站点介绍 + 作者介绍
  *
- * 文案由作者自行修改,改下面 ABOUT 段落的 JSX 文本即可
+ * 隐藏彩蛋:作者"桑葚"可被连续点击 3 次,触发全量站点统计弹窗
+ * (不蒜子 PV / UV + 当前页 PV + 运营天数)
  */
 export default function AboutPage() {
-  // Dither 参数由 src/config/animation.js 统一管理
-  // - 深色模式:Mulberry 紫
-  // - 亮色模式:白色
   const ditherProps = useDitherAnimationProps()
 
-  // 运营天数:仅依赖本地日期差,不蒜子挂了他也准
+  // 运营天数:仅依赖本地日期差
   const [days, setDays] = useState(1)
   useEffect(() => {
     setDays(daysSinceLaunch())
   }, [])
 
-  // 动态注入不蒜子 PV 计数 script(避免污染 index.html,且仅关于页需要)
+  // 动态注入不蒜子 script(全量指标 PV / UV / page_pv)
   useEffect(() => {
     if (document.getElementById('busuanzi-script')) return
     const s = document.createElement('script')
@@ -42,6 +43,34 @@ export default function AboutPage() {
     s.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js'
     document.body.appendChild(s)
   }, [])
+
+  // 彩蛋:连点 3 次作者名 → 弹窗
+  const [statsOpen, setStatsOpen] = useState(false)
+  const clickCountRef = useRef(0)
+  const clickTimerRef = useRef(null)
+
+  const handleAuthorClick = () => {
+    clickCountRef.current += 1
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current)
+    clickTimerRef.current = setTimeout(() => {
+      clickCountRef.current = 0
+    }, TRIPLE_CLICK_WINDOW_MS)
+    if (clickCountRef.current >= 3) {
+      clickCountRef.current = 0
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current)
+      setStatsOpen(true)
+    }
+  }
+
+  // ESC 关闭弹窗
+  useEffect(() => {
+    if (!statsOpen) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') setStatsOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [statsOpen])
 
   return (
     <main className="about-page">
@@ -58,7 +87,6 @@ export default function AboutPage() {
         <div className="about-inner">
           {/* ── 站点 ── */}
           <header className="about-header">
-            {/* <span className="about-eyebrow">About</span> */}
             <h1 className="about-title">桑葚集</h1>
             <p className="about-subtitle">收藏"能用、好用"的内容</p>
           </header>
@@ -75,22 +103,21 @@ export default function AboutPage() {
 
           <div className="about-divider-h" aria-hidden="true" />
 
-          {/* ── 作者 ── */}
+          {/* ── 作者(连续点击 3 次触发统计弹窗) ── */}
           <section className="about-section">
             <h2 className="about-h2">关于作者</h2>
             <p className="about-p">
-              桑葚
+              <button
+                type="button"
+                className="about-author-name"
+                onClick={handleAuthorClick}
+                aria-label="桑葚(连续点击 3 次查看站点统计)"
+                title="桑葚"
+              >
+                桑葚
+              </button>
             </p>
           </section>
-
-          {/* ── 数据:不蒜子 PV + 运营天数(跟随作者之后,排版跟随 footer 风格) ── */}
-          <div className="about-stats">
-            <span>
-              本站访问量 <span id="busuanzi_value_site_pv">…</span> 次
-            </span>
-            <span className="about-stats-sep">·</span>
-            <span>已运营 {days} 天</span>
-          </div>
 
           <footer className="about-footer">
             <a className="about-link" href="https://github.com/nothingtosayyy" target="_blank" rel="noopener noreferrer">
@@ -103,6 +130,49 @@ export default function AboutPage() {
           </footer>
         </div>
       </section>
+
+      {/* ── 彩蛋:全量统计弹窗 ── */}
+      {statsOpen && (
+        <div
+          className="about-modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-label="站点访问统计"
+          onClick={() => setStatsOpen(false)}
+        >
+          <div
+            className="about-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="about-modal-title">站点访问统计</h3>
+            <ul className="about-modal-list">
+              <li className="about-modal-item">
+                <span>站点 PV</span>
+                <strong><span id="busuanzi_value_site_pv">…</span></strong>
+              </li>
+              <li className="about-modal-item">
+                <span>站点 UV</span>
+                <strong><span id="busuanzi_value_site_uv">…</span></strong>
+              </li>
+              <li className="about-modal-item">
+                <span>本页 PV</span>
+                <strong><span id="busuanzi_value_page_pv">…</span></strong>
+              </li>
+              <li className="about-modal-item about-modal-item--local">
+                <span>已运营</span>
+                <strong>{days} 天</strong>
+              </li>
+            </ul>
+            <button
+              type="button"
+              className="about-modal-close"
+              onClick={() => setStatsOpen(false)}
+            >
+              关闭
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
