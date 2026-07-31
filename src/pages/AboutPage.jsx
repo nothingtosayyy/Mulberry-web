@@ -16,6 +16,20 @@ function daysSinceLaunch() {
 // 连续点击 3 次的时间窗(毫秒)
 const TRIPLE_CLICK_WINDOW_MS = 700
 
+// 统计项渲染:
+// - 'loading' → skeleton 脉动占位
+// - 数字      → toLocaleString()
+// - 'error'   → 显式提示,不静默
+function renderStat(value) {
+  if (value === 'loading') {
+    return <span className="about-stat-skel" aria-label="加载中" />
+  }
+  if (value === 'error') {
+    return <span className="about-stat-error">!</span>
+  }
+  return value.toLocaleString()
+}
+
 /**
  * 关于页 — 单屏布局
  * - 左侧(50%):Dither WebGL 动画(Mulberry 紫,带鼠标互动)
@@ -34,14 +48,33 @@ export default function AboutPage() {
     setDays(daysSinceLaunch())
   }, [])
 
-  // 动态注入不蒜子 script(全量指标 PV / UV / page_pv)
+  // 站点统计(复用 Turso):mount 时计入一次,弹窗打开时重新拉取
+  // - sitePv:站点总 PV(独立计数,存在 site_stats 表)
+  // - pagePv:本页(about) PV(复用 article_views,'about' 作为特殊 slug)
+  // - siteUv:暂未接入,UI 上明标"暂未接入"(不假造数据)
+  // - 'loading' 状态(默认):占位骨架
+  // - 数字:就绪
+  // - 'error' 状态:拉取 / 未配置失败,显式提示(不静默)
+  const [sitePv, setSitePv] = useState('loading')
+  const [pagePv, setPagePv] = useState('loading')
+
+  // mount:自增 + 拿到首次值
   useEffect(() => {
-    if (document.getElementById('busuanzi-script')) return
-    const s = document.createElement('script')
-    s.id = 'busuanzi-script'
-    s.async = true
-    s.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js'
-    document.body.appendChild(s)
+    fetch('/api/stats/site', { method: 'POST' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (j && typeof j.pv === 'number') setSitePv(j.pv)
+        else setSitePv('error')
+      })
+      .catch(() => setSitePv('error'))
+
+    fetch('/api/views/about', { method: 'POST' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (j && typeof j.views === 'number') setPagePv(j.views)
+        else setPagePv('error')
+      })
+      .catch(() => setPagePv('error'))
   }, [])
 
   // 彩蛋:连点 3 次作者名 → 弹窗
@@ -72,52 +105,24 @@ export default function AboutPage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [statsOpen])
 
-  // 弹窗打开后:检测不蒜子 spans 是否已回填数字
-  // - 已是数字 → 立即去掉 loading class
-  // - 还在 "…" → MutationObserver 监听,回填后去掉 loading class
-  // - 8s 后仍未回填 → 当作“不蒜子挂了/无数据”,换成 “—” 并去掉 loading
+  // 弹窗打开时:重新 GET,拿最新值(可能别的设备刚刚打开过)
   useEffect(() => {
     if (!statsOpen) return
-    const ids = [
-      'busuanzi_value_site_pv',
-      'busuanzi_value_site_uv',
-      'busuanzi_value_page_pv',
-    ]
-    const observers = []
-    const timers = []
-
-    const checkLoaded = (el) => {
-      const t = el.textContent.trim()
-      if (t && t !== '…' && t !== '-' && !Number.isNaN(Number(t))) {
-        el.classList.remove('is-loading')
-        return true
-      }
-      return false
-    }
-
-    ids.forEach((id) => {
-      const el = document.getElementById(id)
-      if (!el) return
-      el.classList.add('is-loading')
-      if (checkLoaded(el)) return  // 弹窗打开前已回填
-      const obs = new MutationObserver(() => {
-        if (checkLoaded(el)) obs.disconnect()
+    let cancelled = false
+    fetch('/api/stats/site')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (!cancelled && j && typeof j.pv === 'number') setSitePv(j.pv)
       })
-      obs.observe(el, { childList: true, characterData: true, subtree: true })
-      observers.push(obs)
-      // 8s 兜底
-      const tm = setTimeout(() => {
-        if (!checkLoaded(el)) {
-          el.textContent = '—'
-          el.classList.remove('is-loading')
-        }
-      }, 8000)
-      timers.push(tm)
-    })
-
+      .catch(() => {})
+    fetch('/api/views/about')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (!cancelled && j && typeof j.views === 'number') setPagePv(j.views)
+      })
+      .catch(() => {})
     return () => {
-      observers.forEach((o) => o.disconnect())
-      timers.forEach(clearTimeout)
+      cancelled = true
     }
   }, [statsOpen])
 
@@ -197,15 +202,15 @@ export default function AboutPage() {
             <ul className="about-modal-list">
               <li className="about-modal-item">
                 <span>站点 PV</span>
-                <strong><span id="busuanzi_value_site_pv">…</span></strong>
+                <strong>{renderStat(sitePv)}</strong>
               </li>
               <li className="about-modal-item">
                 <span>站点 UV</span>
-                <strong><span id="busuanzi_value_site_uv">…</span></strong>
+                <strong><span className="about-stat-todo">— 暂未接入</span></strong>
               </li>
               <li className="about-modal-item">
                 <span>本页 PV</span>
-                <strong><span id="busuanzi_value_page_pv">…</span></strong>
+                <strong>{renderStat(pagePv)}</strong>
               </li>
               <li className="about-modal-item about-modal-item--local">
                 <span>已运营</span>
