@@ -53,6 +53,9 @@ export default function WordPage() {
         type="article"
         url={article ? `https://mulberrytian.vercel.app/word/${article.slug}` : undefined}
         publishedAt={article?.date ? `${article.date}T00:00:00+08:00` : undefined}
+        modifiedAt={article?.modifiedAt ? `${article.modifiedAt}T00:00:00+08:00` : (article?.date ? `${article.date}T00:00:00+08:00` : undefined)}
+        keywords={article?.tag ? article.tag.split(/[,，、]/).map((s) => s.trim()).filter(Boolean) : undefined}
+        section={article?.catLabel || '随笔'}
       />
       {article ? (
         <WordContent article={article} />

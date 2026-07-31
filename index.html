@@ -4,22 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>桑葚集 · 收藏&quot;能用、好用&quot;的内容</title>
-    <meta name="description" content="收藏&quot;能用、好用&quot;的内容,数据公开在 GitHub 仓库。" />
+    <title>桑葚集 · 个人 blog · 产品、设计、AI 应用的随笔与工具收藏</title>
+    <meta name="description" content="桑葚的个人 blog:产品观察、设计思考、AI 应用实践,以及能用、好用的工具(SKILL)收藏。数据公开在 GitHub 仓库。" />
     <meta name="author" content="桑葚" />
+    <meta name="keywords" content="桑葚集,个人 blog,mulberrytian,产品随笔,设计思考,AI 应用,工具收藏,SKILL,独立开发,产品经理" />
+    <link rel="canonical" href="https://mulberrytian.vercel.app" />
     <!-- 默认 OG meta:SPA 首屏 SEO 兜底,JS 挂载后由 <SEO> 覆盖为页面级内容
          (覆盖范围:微信/微博/QQ/知乎/朋友圈/QQ空间;Twitter 顺手放) -->
-    <meta property="og:site_name" content="桑葚集" />
-    <meta property="og:title" content="桑葚集 · 收藏能用、好用的内容" />
-    <meta property="og:description" content="收藏能用、好用的内容,数据公开在 GitHub 仓库。" />
+    <meta property="og:site_name" content="桑葚集 · 个人 blog" />
+    <meta property="og:title" content="桑葚集 · 个人 blog · 产品、设计、AI 应用的随笔与工具收藏" />
+    <meta property="og:description" content="桑葚的个人 blog:产品观察、设计思考、AI 应用实践,以及能用、好用的工具(SKILL)收藏。" />
     <meta property="og:image" content="https://mulberrytian.vercel.app/og-default.png" />
     <meta property="og:url" content="https://mulberrytian.vercel.app" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="桑葚集" />
-    <meta name="twitter:description" content="收藏能用、好用的内容,数据公开在 GitHub 仓库。" />
+    <meta name="twitter:title" content="桑葚集 · 个人 blog" />
+    <meta name="twitter:description" content="桑葚的个人 blog:产品观察、设计思考、AI 应用实践,以及能用、好用的工具(SKILL)收藏。" />
     <meta name="twitter:image" content="https://mulberrytian.vercel.app/og-default.png" />
+
+    <!-- 站点级结构化数据(Google / Bing 富卡片)
+         - WebSite:让搜索框出现 sitelinks 搜索框
+         - Person:作者身份信号,助力 E-E-A-T(经验/专业/权威/可信)
+         - JS 挂载后,文章页会再追加 BlogPosting 级别 JSON-LD(见 <SEO>) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://mulberrytian.vercel.app/#website",
+          "url": "https://mulberrytian.vercel.app",
+          "name": "桑葚集",
+          "alternateName": "Mulberry",
+          "description": "收藏能用、好用的内容。个人随笔 + 工具(SKILL)收藏集,数据公开在 GitHub 仓库。",
+          "inLanguage": "zh-CN",
+          "publisher": { "@id": "https://mulberrytian.vercel.app/#person" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://mulberrytian.vercel.app/#person",
+          "name": "桑葚",
+          "url": "https://mulberrytian.vercel.app/about",
+          "description": "产品 / 设计 / AI 应用的个人 blog 站长,关注能用、好用的内容与工具。",
+          "knowsAbout": ["产品设计", "交互设计", "AI 应用", "独立开发", "个人知识管理"],
+          "sameAs": [
+            "https://github.com/nothingtosayyy"
+          ]
+        }
+      ]
+    }
+    </script>
+
     <!-- 防闪烁:React 挂载前同步读 localStorage 解析 theme,设到 <html data-theme>
          必须放在最顶部,且用同步 JS。React 后置设置会闪一下深色再切到亮色。
          两态:light | dark,默认 dark。 -->

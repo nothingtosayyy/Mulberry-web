@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# 不爬开发 / 草稿内容(目前没有,但留口子)
+Disallow: /*.tmp$
+
+Sitemap: https://mulberrytian.vercel.app/sitemap.xml
