@@ -23,7 +23,7 @@ export default function ShareButton() {
     const url = typeof window !== 'undefined' ? window.location.href : ''
     const success = await copyToClipboard(url)
     if (success) {
-      showToast('链接已复制,去微信/微博贴吧')
+      showToast('链接已复制')
       setOk(true)
       setTimeout(() => setOk(false), 1500)
     } else {
