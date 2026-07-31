@@ -1,6 +1,7 @@
 # 桑葚集 · Mulberry
 
-一个**纯静态的个人收藏集网站**:展示精选网站的设计观察(`README.md` + `DESIGN.md`),
+个人bolg模板/个人收藏集/
+
 通过 React + Vite 构建,部署在 Vercel,数据源在 GitHub 仓库。
 
 ## 工作流
@@ -16,26 +17,6 @@
 │  categories.json         │         │  scripts/build-index.mjs│
 └─────────────────────────┘         └─────────────────────────┘
 ```
-
-1. **数据层**:`Mulberry-SKILL` 仓库是单一数据源
-   - 目录 = 分类(`ai-and-llm/`、`auto/`、`backend/` ...)
-   - 每个 Skill 一个目录,内含 `README.md`(frontmatter 元数据)+ `DESIGN.md`(预览模块)
-2. **构建层**:本仓库的 `scripts/build-index.mjs`
-   - 读取 `Mulberry-SKILL` 的所有 README/DESIGN 索引
-   - 生成静态 `public/index.json`(首页用)
-3. **运行层**:Vercel Edge Function `api/raw/[...path].js`
-   - 浏览器请求 `/api/raw/<repo path>` 时,代理到 `raw.githubusercontent.com`
-   - 5 分钟边缘缓存(`s-maxage=300, stale-while-revalidate=86400`)
-   - 全局只回源 GitHub 一次,完美避开未鉴权 60/h 限流
-
-## 限流问题的解决方案
-
-| 阶段 | 调用 GitHub 次数 |
-|---|---|
-| 首页加载 | **0 次**(`/index.json` 是构建时固化的静态文件) |
-| 详情页加载 | **0 次**(走 Vercel Edge 代理,首字符命中边缘缓存) |
-| GitHub API | 仅 `build-index.mjs` 跑一次(可在 Vercel build 时跑) |
-
 ## 本地开发
 
 ```bash
