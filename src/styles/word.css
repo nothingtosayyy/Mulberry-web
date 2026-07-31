@@ -272,6 +272,36 @@
   opacity: 0.4;
 }
 
+.word-detail-views {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 加载中骨架(skeleton) */
+.word-detail-views--loading {
+  display: inline-flex;
+  align-items: center;
+  height: 1em;
+  line-height: 1;
+}
+.word-detail-views-skel {
+  display: inline-block;
+  width: 72px;
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 0%,
+    var(--border-strong) 50%,
+    var(--surface-2) 100%
+  );
+  background-size: 200% 100%;
+  animation: word-views-skel 1.4s ease-in-out infinite;
+}
+@keyframes word-views-skel {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .word-detail-body {
   margin-top: 8px;
 }
@@ -368,9 +398,7 @@
   font-style: italic;
 }
 
-/* ─────────────────────────────────────────────── */
-/*  响应式                                          */
-/* ─────────────────────────────────────────────── */
+/* ── 响应式 ── */
 
 @media (max-width: 900px) {
   .word-detail-grid {
@@ -405,5 +433,8 @@
   }
   .word-detail-title {
     font-size: 26px;
+  }
+  .word-detail-views-skel {
+    width: 56px;
   }
 }

@@ -232,6 +232,22 @@
   margin-top: 4px;
 }
 
+/* 不蒜子加载中:shimmer 高亮脉动(区分是"在加载"还是"无数据") */
+.about-modal-item strong > span[id^="busuanzi_value_"] {
+  display: inline-block;
+  min-width: 2.4em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.about-modal-item strong > span[id^="busuanzi_value_"].is-loading {
+  color: var(--fg-dim);
+  animation: about-stat-pulse 1.2s ease-in-out infinite;
+}
+@keyframes about-stat-pulse {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.85; }
+}
+
 .about-modal-close {
   background: transparent;
   border: 1px solid var(--border);

@@ -72,6 +72,55 @@ export default function AboutPage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [statsOpen])
 
+  // 弹窗打开后:检测不蒜子 spans 是否已回填数字
+  // - 已是数字 → 立即去掉 loading class
+  // - 还在 "…" → MutationObserver 监听,回填后去掉 loading class
+  // - 8s 后仍未回填 → 当作“不蒜子挂了/无数据”,换成 “—” 并去掉 loading
+  useEffect(() => {
+    if (!statsOpen) return
+    const ids = [
+      'busuanzi_value_site_pv',
+      'busuanzi_value_site_uv',
+      'busuanzi_value_page_pv',
+    ]
+    const observers = []
+    const timers = []
+
+    const checkLoaded = (el) => {
+      const t = el.textContent.trim()
+      if (t && t !== '…' && t !== '-' && !Number.isNaN(Number(t))) {
+        el.classList.remove('is-loading')
+        return true
+      }
+      return false
+    }
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id)
+      if (!el) return
+      el.classList.add('is-loading')
+      if (checkLoaded(el)) return  // 弹窗打开前已回填
+      const obs = new MutationObserver(() => {
+        if (checkLoaded(el)) obs.disconnect()
+      })
+      obs.observe(el, { childList: true, characterData: true, subtree: true })
+      observers.push(obs)
+      // 8s 兜底
+      const tm = setTimeout(() => {
+        if (!checkLoaded(el)) {
+          el.textContent = '—'
+          el.classList.remove('is-loading')
+        }
+      }, 8000)
+      timers.push(tm)
+    })
+
+    return () => {
+      observers.forEach((o) => o.disconnect())
+      timers.forEach(clearTimeout)
+    }
+  }, [statsOpen])
+
   return (
     <main className="about-page">
       {/* 左:Dither 动画 */}

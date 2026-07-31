@@ -70,27 +70,39 @@ export default function WordPage() {
 function WordContent({ article }) {
   const { loading, error, data } = useArticleDetail({ path: article.path })
 
-  // 阅读数:同会话只 +1,避免刷新暴增
+  // 阅读数:三态 loading / ready / hidden(拉失败 或 KV 未配置)
+  // 同会话只 +1,避免刷新暴增
   const [views, setViews] = useState(null)
+  // null = 还在加载,'hidden' = 静默隐藏(失败 / 未配置),数字 = 就绪
+  const [viewStatus, setViewStatus] = useState(null)
   const countedRef = useRef(false)
 
   useEffect(() => {
     if (countedRef.current) return
     const key = `mulberry:viewed:${article.slug}`
-    if (sessionStorage.getItem(key) === '1') {
+    const isCounted = sessionStorage.getItem(key) === '1'
+    const settle = (j) => {
+      if (j && typeof j.views === 'number') {
+        setViews(j.views)
+        setViewStatus('ready')
+      } else {
+        setViewStatus('hidden')
+      }
+    }
+    if (isCounted) {
       // 本会话已计过,只读不增
       fetch(`/api/views/${encodeURIComponent(article.slug)}`)
         .then((r) => (r.ok ? r.json() : null))
-        .then((j) => j && setViews(j.views))
-        .catch(() => {})
+        .then(settle)
+        .catch(() => setViewStatus('hidden'))
       return
     }
     countedRef.current = true
     sessionStorage.setItem(key, '1')
     fetch(`/api/views/${encodeURIComponent(article.slug)}`, { method: 'POST' })
       .then((r) => (r.ok ? r.json() : null))
-      .then((j) => j && setViews(j.views))
-      .catch(() => {})
+      .then(settle)
+      .catch(() => setViewStatus('hidden'))
   }, [article.slug])
 
   return (
@@ -121,11 +133,19 @@ function WordContent({ article }) {
             <span className="word-detail-meta-sep">·</span>
           )}
           {article.readingTime && <span>{article.readingTime} min read</span>}
-          {(article.readingTime || article.date) && views !== null && (
+          {(article.readingTime || article.date) && viewStatus === 'ready' && (
             <span className="word-detail-meta-sep">·</span>
           )}
-          {views !== null && (
+          {viewStatus === 'ready' && (
             <span className="word-detail-views">{views.toLocaleString()} 次阅读</span>
+          )}
+          {(article.readingTime || article.date) && viewStatus === null && (
+            <span className="word-detail-meta-sep">·</span>
+          )}
+          {viewStatus === null && (
+            <span className="word-detail-views word-detail-views--loading" aria-label="阅读数加载中">
+              <span className="word-detail-views-skel" />
+            </span>
           )}
         </div>
 
