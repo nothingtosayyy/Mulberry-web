@@ -10,12 +10,6 @@
  * 字段值可以是字符串,也可以是函数(用于动态文案,如 "N 篇" / "N min read")
  */
 export default {
-  // 品牌 / 站名 — 顶栏 Logo 文字、About 页站名、SEO fallback 都用这个
-  // 英文翻译是 Mulberry(同一物)
-  brand: {
-    name: '桑葚集',
-  },
-
   // 通用
   common: {
     loading: '加载中…',
@@ -104,45 +98,22 @@ export default {
     copyRawTitle: '复制 SKILL.md 链接',
   },
 
-  // AboutPage — 站点内容
-  // 这里是站点自身的介绍文案(跟文章 / skill 内容不同),需要随语言切换
+  // AboutPage
   about: {
     pageTitle: '关于',
     pageDesc: '关于这个站、它的内容,以及站长的二三事。',
-    siteTitle: '桑葚集',
-    siteSubtitle: '收藏能用、好用的内容',
-    siteSection: '关于站点',
-    sitePara1: '收藏工作与学习里真正用过、觉得值得留下来的内容',
-    sitePara2: '数据完全公开在 GitHub 仓库,欢迎 fork,也可以直接 clone 到本地当个人收藏夹用。',
-    authorSection: '关于作者',
+    sectionAuthor: '关于作者',
     authorName: '桑葚',
     authorBio: '产品 / 设计 / AI 应用从业者。这里是我整理的私人收藏与随笔,如果你也想做点什么 — 欢迎聊聊。',
-    authorClickHint: '桑葚(连续点击 3 次查看站点统计)',
-    contactSection: '联系',
+    sectionContact: '联系',
     github: 'GitHub',
     rss: 'RSS 订阅',
-    contactMe: '联系我',
-    licenseSection: '许可',
+    sectionLicense: '许可',
     license: '本站内容采用 MIT 协议发布,数据公开,二次创作只需注明来源。',
-    statsSection: '数据',
-    // 隐藏彩蛋：全量统计弹窗
-    modalTitle: '站点访问统计',
-    modalClose: '关闭',
-    modalGroups: {
-      today: '今日',
-      site: '本站',
-      page: '本页(关于)',
-    },
-    modalItems: {
-      todayPv: '今日总访问量',
-      todayUv: '今日总访客数',
-      sitePv: '本站总访问量',
-      siteUv: '本站总访客数',
-      pagePv: '本页总阅读量',
-      pageUv: '本页总访客数',
-      daysOnline: '已运营',
-    },
-    daysUnit: (n) => `${n} 天`,
+    sectionStats: '数据',
+    statsPv: '本站访问量',
+    statsUv: '本站访客数',
+    statsDays: (n) => `本站已运营 ${n} 天`,
   },
 
   // 404 NotFound

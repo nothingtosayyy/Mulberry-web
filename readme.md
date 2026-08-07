@@ -137,6 +137,11 @@ npm run dev
 | Add a new page | Create `src/pages/MyPage.jsx` + add a `<Route>` in `App.jsx` |
 | Replace analytics | Remove busuanzi `<script>`, plug in Plausible / Umami |
 
+## 📚 More Docs
+
+- [GitHub Topics suggestion (20 keywords for max discoverability)](docs/github-topics.md)
+- [SEO prompt templates (4 reusable prompts)](docs/seo-prompts.md)
+
 ## 📜 License
 
 MIT — use, modify, commercialize freely. Attribution appreciated but not required.

@@ -24,7 +24,7 @@ const TRIPLE_CLICK_WINDOW_MS = 700
 // - 'error'   → 显式提示,不静默
 function renderStat(value) {
   if (value === 'loading') {
-    return <span className="about-stat-skel" aria-label="loading" />
+    return <span className="about-stat-skel" aria-label="加载中" />
   }
   if (value === 'error') {
     return <span className="about-stat-error">!</span>
@@ -38,11 +38,8 @@ function renderStat(value) {
  * - 中间:1px 垂直分割线
  * - 右侧(50%):站点介绍 + 作者介绍
  *
- * 隐藏彩蛋:作者名可被连续点击 3 次,触发全量站点统计弹窗
+ * 隐藏彩蛋:作者"桑葚"可被连续点击 3 次,触发全量站点统计弹窗
  * (不蒜子 PV / UV + 当前页 PV + 运营天数)
- *
- * i18n:站点介绍 / 作者介绍 / 弹窗等**站点级文案**走 t('key'),
- *      切换语言时即时刷新。Logo 文字(brand.name)与导航栏同步。
  */
 export default function AboutPage() {
   const { t } = useI18n()
@@ -178,30 +175,34 @@ export default function AboutPage() {
         <div className="about-inner">
           {/* ── 站点 ── */}
           <header className="about-header">
-            <h1 className="about-title">{t('about.siteTitle')}</h1>
-            <p className="about-subtitle">{t('about.siteSubtitle')}</p>
+            <h1 className="about-title">桑葚集</h1>
+            <p className="about-subtitle">收藏"能用、好用"的内容</p>
           </header>
 
           <section className="about-section">
-            <h2 className="about-h2">{t('about.siteSection')}</h2>
-            <p className="about-p">{t('about.sitePara1')}</p>
-            <p className="about-p">{t('about.sitePara2')}</p>
+            <h2 className="about-h2">关于站点</h2>
+            <p className="about-p">
+              收藏工作与学习里真正用过、觉得值得留下来的内容
+            </p>
+            <p className="about-p">
+              数据完全公开在 GitHub 仓库,欢迎 fork,也可以直接 clone 到本地当个人收藏夹用。
+            </p>
           </section>
 
           <div className="about-divider-h" aria-hidden="true" />
 
           {/* ── 作者(连续点击 3 次触发统计弹窗) ── */}
           <section className="about-section">
-            <h2 className="about-h2">{t('about.authorSection')}</h2>
+            <h2 className="about-h2">关于作者</h2>
             <p className="about-p">
               <button
                 type="button"
                 className="about-author-name"
                 onClick={handleAuthorClick}
-                aria-label={t('about.authorClickHint')}
-                title={t('about.authorName')}
+                aria-label="桑葚(连续点击 3 次查看站点统计)"
+                title="桑葚"
               >
-                {t('about.authorName')}
+                桑葚
               </button>
             </p>
           </section>
@@ -212,7 +213,7 @@ export default function AboutPage() {
             </a>
             <span className="about-footer-sep">·</span>
             <a className="about-link" href="mailto:tiange1@agent.qq.com">
-              {t('about.contactMe')} ↗
+              联系我 ↗
             </a>
           </footer>
         </div>
@@ -224,54 +225,54 @@ export default function AboutPage() {
           className="about-modal-backdrop"
           role="dialog"
           aria-modal="true"
-          aria-label={t('about.modalTitle')}
+          aria-label="站点访问统计"
           onClick={() => setStatsOpen(false)}
         >
           <div
             className="about-modal"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="about-modal-title">{t('about.modalTitle')}</h3>
+            <h3 className="about-modal-title">站点访问统计</h3>
             <ul className="about-modal-list">
               <li className="about-modal-group-label">
-                <span>{t('about.modalGroups.today')}</span>
+                <span>今日</span>
               </li>
               <li className="about-modal-item">
-                <span>{t('about.modalItems.todayPv')}</span>
+                <span>今日总访问量</span>
                 <strong>{renderStat(todayPv)}</strong>
               </li>
               <li className="about-modal-item">
-                <span>{t('about.modalItems.todayUv')}</span>
+                <span>今日总访客数</span>
                 <strong>{renderStat(todayUv)}</strong>
               </li>
 
               <li className="about-modal-group-label">
-                <span>{t('about.modalGroups.site')}</span>
+                <span>本站</span>
               </li>
               <li className="about-modal-item">
-                <span>{t('about.modalItems.sitePv')}</span>
+                <span>本站总访问量</span>
                 <strong>{renderStat(sitePv)}</strong>
               </li>
               <li className="about-modal-item">
-                <span>{t('about.modalItems.siteUv')}</span>
+                <span>本站总访客数</span>
                 <strong>{renderStat(siteUv)}</strong>
               </li>
 
               <li className="about-modal-group-label">
-                <span>{t('about.modalGroups.page')}</span>
+                <span>本页(关于)</span>
               </li>
               <li className="about-modal-item">
-                <span>{t('about.modalItems.pagePv')}</span>
+                <span>本页总阅读量</span>
                 <strong>{renderStat(pagePv)}</strong>
               </li>
               <li className="about-modal-item">
-                <span>{t('about.modalItems.pageUv')}</span>
+                <span>本页总访客数</span>
                 <strong>{renderStat(pageUv)}</strong>
               </li>
 
               <li className="about-modal-item about-modal-item--local">
-                <span>{t('about.modalItems.daysOnline')}</span>
-                <strong>{t('about.daysUnit', days)}</strong>
+                <span>已运营</span>
+                <strong>{days} 天</strong>
               </li>
             </ul>
             <button
@@ -279,7 +280,7 @@ export default function AboutPage() {
               className="about-modal-close"
               onClick={() => setStatsOpen(false)}
             >
-              {t('about.modalClose')}
+              关闭
             </button>
           </div>
         </div>
