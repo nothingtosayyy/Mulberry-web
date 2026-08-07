@@ -244,11 +244,6 @@ npm run build:index
 npm run dev   # http://localhost:5173
 ```
 
-## 📚 配套文档
-
-- [GitHub 主题词建议(20 个英文关键词,提升曝光)](docs/github-topics.md)
-- [SEO 提示词模板(4 个可复用 prompt)](docs/seo-prompts.md)
-
 ## 📜 许可
 
 MIT — 自由使用、修改、商用。
