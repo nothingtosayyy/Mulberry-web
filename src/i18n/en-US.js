@@ -5,6 +5,11 @@
  * Only system UI strings; content stays in its original language.
  */
 export default {
+  // Brand — top-left logo, About page site name
+  brand: {
+    name: 'Mulberry',
+  },
+
   common: {
     loading: 'Loading…',
     loadFailed: (reason) => `Failed to load: ${reason}`,
@@ -85,21 +90,44 @@ export default {
     copyRawTitle: 'Copy SKILL.md link',
   },
 
+  // AboutPage — site content (translated, not user-generated)
   about: {
     pageTitle: 'About',
     pageDesc: 'About this site, its content, and the person behind it.',
-    sectionAuthor: 'About the author',
+    siteTitle: 'Mulberry',
+    siteSubtitle: 'A curated collection of useful content',
+    siteSection: 'About this site',
+    sitePara1: 'Things I have actually used and found worth keeping in my work and study.',
+    sitePara2: 'All data is public on GitHub. Feel free to fork, or clone locally to use as your own bookmark collection.',
+    authorSection: 'About the author',
     authorName: 'Mulberry',
     authorBio: 'Product / design / AI practitioner. These are my private notes and curated finds — feel free to reach out.',
-    sectionContact: 'Contact',
+    authorClickHint: 'Mulberry (triple-click to see site stats)',
+    contactSection: 'Contact',
     github: 'GitHub',
     rss: 'RSS',
-    sectionLicense: 'License',
+    contactMe: 'Contact me',
+    licenseSection: 'License',
     license: 'MIT — content is open. Attribution appreciated but not required.',
-    sectionStats: 'Stats',
-    statsPv: 'Total page views',
-    statsUv: 'Total unique visitors',
-    statsDays: (n) => `${n} day${n === 1 ? '' : 's'} online`,
+    statsSection: 'Stats',
+    // Hidden easter egg: full stats modal
+    modalTitle: 'Site statistics',
+    modalClose: 'Close',
+    modalGroups: {
+      today: 'Today',
+      site: 'Site',
+      page: 'This page (About)',
+    },
+    modalItems: {
+      todayPv: 'Today page views',
+      todayUv: 'Today unique visitors',
+      sitePv: 'Total page views',
+      siteUv: 'Total unique visitors',
+      pagePv: 'This page views',
+      pageUv: 'This page unique visitors',
+      daysOnline: 'Online for',
+    },
+    daysUnit: (n) => `${n} day${n === 1 ? '' : 's'}`,
   },
 
   notFound: {
