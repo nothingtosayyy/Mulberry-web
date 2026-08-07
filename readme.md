@@ -1,128 +1,253 @@
-# 桑葚集 · Mulberry
-
 <div align="right">
-  <a href="#chinese">🌐 简体中文</a> · <a href="#english">English</a>
+  <a href="#english">🌐 English</a> · <a href="#chinese">简体中文</a>
 </div>
 
-<a id="chinese"></a>
+<a id="english"></a>
 
-> **个人 blog / 作品集 / 工具收藏模板**
-> React + Vite + Vercel · 内容存 GitHub · 一键部署 · 零后端运维
+# Mulberry
+
+> **🎯 No database. No server. No DevOps.**
+> A personal blog & portfolio template powered by **React + Vite + Vercel**.
+> Content lives in a GitHub repo. Deploy with one click. Free forever.
+
+![Mulberry homepage — dark mode](docs/screenshots/home-dark.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://vercel.com)
+[![Deploy on Vercel](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fnothingtosayyy%2FMulberry-web)
 [![React](https://img.shields.io/badge/React-18-149eca?logo=react)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite)](https://vitejs.dev)
+[![No Database](https://img.shields.io/badge/Database-None-success)](#-why-mulberry)
+[![No Server](https://img.shields.io/badge/Server-Static%20%2B%20Edge-success)](#-why-mulberry)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/nothingtosayyy/Mulberry-web/pulls)
 
-🌐 在线浏览:[mulberrytian.vercel.app](https://mulberrytian.vercel.app/)
+🌐 **Live demo:** [mulberrytian.vercel.app](https://mulberrytian.vercel.app/)
 
-## ✨ 特性
+## 🎯 Why Mulberry?
 
-- 🚀 **零配置部署** — Vercel 一键,自带 SPA fallback + Edge 缓存
-- 📝 **内容与代码分离** — Markdown 写在 GitHub 仓库,前端无需 rebuild 即可同步
-- 🔍 **SEO 友好** — 完整的 Open Graph / Twitter Card / JSON-LD / sitemap / robots.txt
-- 🌗 **暗色模式** — 跟随系统 + 手动切换,localStorage 持久化
-- 📱 **响应式** — 桌面 / 平板 / 手机三端适配
-- 🖼 **阅读体验** — 代码块一键复制 / 图片灯箱放大 / 路由切换进度条
-- 📡 **RSS 订阅** — build 时自动生成,无需任何后端
-- 🎨 **个人品牌** — 主题色 / 字体 / 文案全部集中在 `src/styles/`
+Most blog templates require you to set up a database, configure a server, manage a CMS, and pay for hosting.
 
-## 🚀 快速开始(5 分钟)
+Mulberry skips all of that:
+
+| | Traditional blog | Mulberry |
+|---|---|---|
+| **Database** | MySQL / Postgres | ✅ None — Markdown files in a GitHub repo |
+| **Server** | Node.js / PHP / Django | ✅ Static files + 1 Edge Function (read-only proxy) |
+| **Hosting** | VPS ($5+/mo) | ✅ Vercel free tier (generous limits) |
+| **Content updates** | Log in to admin panel | ✅ Push a `.md` file to GitHub |
+| **Backups** | Manual dumps | ✅ Git history is your backup |
+| **Domain** | Configure DNS / SSL | ✅ Free `*.vercel.app` subdomain (or your own) |
+
+**If you can use GitHub, you can run Mulberry.** No command line required for content updates — just edit Markdown in the GitHub web editor.
+
+## 🚀 60-Second Deploy
+
+Click the button → wait 30 seconds → your site is live.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fnothingtosayyy%2FMulberry-web)
+
+That's it. No environment variables to set. No database to provision. No build configuration to write.
+
+## ✨ Features
+
+- 📝 **GitHub-as-CMS** — Write posts in Markdown, push to GitHub, site auto-updates (no rebuild needed)
+- 🔍 **SEO-ready** — Open Graph / Twitter Card / JSON-LD (Article / WebSite / Person) / sitemap.xml / robots.txt
+- 🌗 **Dark mode** — Follows system + manual toggle, no flash on load
+- 📱 **Responsive** — Desktop, tablet, mobile
+- 🖼 **Reading experience** — One-click code copy, image lightbox, route progress bar
+- 📡 **RSS / Atom feed** — Generated at build time
+- 🎨 **Theme via CSS variables** — Change `--accent` and the whole site updates
+- 🔗 **Share button** — One-click link copy for WeChat / Weibo / Twitter
+- 📊 **Lightweight analytics** — Optional: busuanzi (PV/UV) + Turso (per-article views)
+
+## 🛠 Tech Stack
+
+| Layer | Choice | Why |
+|---|---|---|
+| Frontend | React 18 + react-router-dom v6 | Industry standard, huge ecosystem |
+| Build | Vite 5 | Fast HMR, tiny config |
+| Hosting | Vercel | Free tier, automatic HTTPS, global CDN |
+| Server-side | Vercel Edge Functions | Read-only proxy to GitHub raw files |
+| Data | GitHub repos (Markdown + frontmatter) | Versioned, public, free |
+| Rendering | marked + custom `enhanceHtml` | Injects code-copy buttons + lightbox hooks |
+| Styling | Plain CSS + CSS variables | No build step for styles, instant theme switch |
+| Stats (optional) | busuanzi + Turso (libSQL) | Free, edge-deployed, no auth needed |
+
+**No stateful services. No Docker. No `docker-compose.yml`. No migrations. No environment secrets to leak.**
+
+## 📂 Project Structure
+
+```
+mulberry-web/
+├── api/                       # 1 Edge Function: /api/raw (read-only GitHub proxy)
+├── src/
+│   ├── pages/                 # HomePage / WordListPage / WordPage / DetailPage / AboutPage / NotFound
+│   ├── components/            # SEO / MarkdownBody / Lightbox / RouteProgressBar / ShareButton / ...
+│   ├── hooks/                 # useSkillData / useArticles / useTheme
+│   ├── utils/                 # clipboard / enhanceMarkdown
+│   ├── context/               # ToastContext
+│   ├── styles/                # All theme variables + per-page CSS
+│   └── App.jsx + main.jsx     # Routing + entry
+├── public/                    # Build-time data: index.json / articles.json / rss.xml / sitemap.xml
+├── scripts/                   # build-index / build-articles / build-rss / build-sitemap
+├── docs/                      # github-topics.md / seo-prompts.md / screenshots/
+├── index.html                 # Site-level JSON-LD + GSC verification meta
+├── vercel.json                # SPA fallback + cache headers
+└── package.json
+```
+
+## 📝 Use as a Template (3 Steps)
+
+1. **Click "Use this template"** on the GitHub repo page (or fork it)
+2. **Edit `src/components/SEO.jsx`** — change `SITE_NAME`, `SITE_URL`, `OG_DEFAULT`, default description
+3. **Replace content** — fork the content repos and put your Markdown under `cat/slug/README.md`:
+   - [`Mulberry-SKILL`](https://github.com/nothingtosayyy/Mulberry-SKILL) — for project/collection entries
+   - [`Mulberry-word`](https://github.com/nothingtosayyy/Mulberry-word) — for blog posts
+
+That's it. Push to your repo → Vercel auto-deploys → your site is live with your content.
+
+## 🌐 Local Development
 
 ```bash
-# 1. clone
+# 1. Clone (with submodules or separate clones)
 git clone https://github.com/nothingtosayyy/Mulberry-web.git my-site
 cd my-site
 
-# 2. 安装依赖
+# 2. Install
 npm install
 
-# 3. 准备数据源:把内容仓库 clone 到 ./data-repo
+# 3. Clone content repos
 git clone https://github.com/nothingtosayyy/Mulberry-SKILL.git data-repo
+# (optional) git clone https://github.com/nothingtosayyy/Mulberry-word.git data-word
 
-# 4. 生成静态索引
+# 4. Generate the static index
 npm run build:index
 
-# 5. 启动
-npm run dev    # http://localhost:5173
+# 5. Run dev server
+npm run dev
+# → http://localhost:5173
 ```
 
-## 📦 用作模板(Fork 后 3 步改成你自己的站)
+## 🎨 Customization
 
-1. **改站点信息** — 编辑 `src/components/SEO.jsx` 和 `index.html` 顶部的 `SITE_NAME / SITE_URL / OG_DEFAULT`
-2. **换内容** — fork [Mulberry-SKILL](https://github.com/nothingtosayyy/Mulberry-SKILL) / [Mulberry-word](https://github.com/nothingtosayyy/Mulberry-word),按 `cat/slug/README.md` 格式填入自己的内容
-3. **改主题** — `src/styles/` 下覆盖 CSS 变量(`--accent / --bg / --fg / --font-mono`...),所有页面即时生效
-4. **部署** — `npm i -g vercel && vercel login && vercel --prod`
-
-## 🛠 技术栈
-
-| 类别 | 选型 |
+| Want to change | Edit |
 |---|---|
-| 前端框架 | React 18 + react-router-dom v6 |
-| 构建 | Vite 5(本地 dev middleware 自带 `/api/raw` 代理) |
-| 部署 | Vercel(Edge Function + Static Hosting) |
-| 数据 | GitHub Repo(Markdown 源码,frontmatter 元数据) |
-| 内容渲染 | marked + 自写 `enhanceHtml` 注入复制/灯箱 |
-| SEO | 自写 `<SEO>` 组件(OG / Twitter / JSON-LD / canonical) |
-| 样式 | 原生 CSS + CSS 变量(无 Tailwind,主题切换零成本) |
-| 数据统计 | 不蒜子(PV/UV)+ Vercel KV(Upstash,文章阅读数) |
+| Site name, URL, OG image | `src/components/SEO.jsx` + `index.html` |
+| Theme color / font | `src/styles/*.css` — look for `--accent`, `--bg`, `--fg` |
+| Add a new content category | `data-repo/categories.json` (auto-discovered) |
+| Add a new page | Create `src/pages/MyPage.jsx` + add a `<Route>` in `App.jsx` |
+| Replace analytics | Remove busuanzi `<script>`, plug in Plausible / Umami |
+
+## 📚 More Docs
+
+- [GitHub Topics suggestion (20 keywords for max discoverability)](docs/github-topics.md)
+- [SEO prompt templates (4 reusable prompts)](docs/seo-prompts.md)
+
+## 📜 License
+
+MIT — use, modify, commercialize freely. Attribution appreciated but not required.
+
+---
+
+<p align="center">
+  <sub>⭐ Star this repo if it helped you — it helps others find it.</sub>
+</p>
+
+---
+
+<details>
+<summary><strong>🇨🇳 简体中文(点击展开)</strong></summary>
+
+<a id="chinese"></a>
+
+# 桑葚集 · Mulberry
+
+> **🎯 无数据库。无服务器。零运维。**
+> 一款**个人 blog / 作品集 / 工具收藏模板**。React + Vite + Vercel。
+> 内容存 GitHub,一键部署,永久免费。
+
+![Mulberry 主页 — 暗色模式](docs/screenshots/home-dark.png)
+
+🌐 **在线浏览:** [mulberrytian.vercel.app](https://mulberrytian.vercel.app/)
+
+## 🎯 为什么选 Mulberry?
+
+| | 传统 blog | Mulberry |
+|---|---|---|
+| **数据库** | MySQL / Postgres | ✅ **不需要** — Markdown 文件存 GitHub 仓库 |
+| **服务器** | Node.js / PHP / Django | ✅ 静态文件 + 1 个 Edge Function(只读代理) |
+| **托管** | VPS(¥30+/月) | ✅ Vercel 免费额度(够个人站用) |
+| **更新内容** | 登录后台编辑器 | ✅ 推送一个 `.md` 文件到 GitHub |
+| **备份** | 手动导出 | ✅ Git 历史就是你的备份 |
+| **域名 / HTTPS** | 配置 DNS / SSL | ✅ 免费 `*.vercel.app` 子域名(或绑定自有域名) |
+
+**只要你会用 GitHub,就能跑 Mulberry。** 内容更新甚至不需要命令行 — 在 GitHub 网页编辑器里改 Markdown 即可。
+
+## 🚀 60 秒部署
+
+点按钮 → 等 30 秒 → 站点上线。
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fnothingtosayyy%2FMulberry-web)
+
+就这样。**不用配环境变量、不用建数据库、不用写 build 配置。**
+
+## ✨ 特性
+
+- 📝 **GitHub 当 CMS** — Markdown 写文章,推到 GitHub,站点自动更新(无需 rebuild)
+- 🔍 **SEO 完整** — OG / Twitter / JSON-LD(Article / WebSite / Person)/ sitemap / robots
+- 🌗 **暗色模式** — 跟随系统 + 手动切换,无闪烁
+- 📱 **响应式** — 桌面 / 平板 / 手机
+- 🖼 **阅读体验** — 代码块一键复制 / 图片灯箱 / 路由进度条
+- 📡 **RSS / Atom** — build 时生成
+- 🎨 **主题用 CSS 变量** — 改一个 `--accent` 全站变色
+- 🔗 **分享按钮** — 一键复制链接(微信 / 微博 / Twitter 通用)
+- 📊 **轻量统计** — 可选:不蒜子(PV/UV)+ Turso(每篇文章阅读数)
 
 ## 📂 项目结构
 
 ```
 mulberry-web/
-├── api/                       # Vercel Edge Function(/api/raw 代理 GitHub)
+├── api/                       # 1 个 Edge Function:/api/raw(只读代理 GitHub)
 ├── src/
 │   ├── pages/                 # HomePage / WordListPage / WordPage / DetailPage / AboutPage / NotFound
-│   ├── components/            # SEO / MarkdownBody / Lightbox / RouteProgressBar / ShareButton ...
+│   ├── components/            # SEO / MarkdownBody / Lightbox / RouteProgressBar / ShareButton / ...
 │   ├── hooks/                 # useSkillData / useArticles / useTheme
 │   ├── utils/                 # clipboard / enhanceMarkdown
 │   ├── context/               # ToastContext
-│   ├── styles/                # 主题 / 布局 / 暗色模式
+│   ├── styles/                # 主题 + 各页面 CSS
 │   └── App.jsx + main.jsx     # 路由 + 入口
-├── public/                    # build 产物 + index.json / articles.json
+├── public/                    # build 时数据:index.json / articles.json / rss.xml / sitemap.xml
 ├── scripts/                   # build-index / build-articles / build-rss / build-sitemap
-├── index.html                 # 含站点级 JSON-LD + GSC 验证
+├── docs/                      # github-topics.md / seo-prompts.md / screenshots/
+├── index.html                 # 站点级 JSON-LD + GSC 验证
 ├── vercel.json                # SPA fallback + 缓存策略
 └── package.json
 ```
 
-## 🌐 部署到 Vercel
+## 📝 用作模板(3 步)
+
+1. **点 "Use this template"**(或 Fork)
+2. **改 `src/components/SEO.jsx`** 里的 `SITE_NAME / SITE_URL / OG_DEFAULT`
+3. **换内容** — fork 内容仓库,把 Markdown 放进 `cat/slug/README.md`:
+   - [`Mulberry-SKILL`](https://github.com/nothingtosayyy/Mulberry-SKILL) — 工具 / 项目 / 收藏
+   - [`Mulberry-word`](https://github.com/nothingtosayyy/Mulberry-word) — 随笔 / 文章
+
+完了。推到仓库 → Vercel 自动部署 → 站点上线。
+
+## 🌐 本地开发
 
 ```bash
-npm i -g vercel
-vercel login
-vercel --prod
+git clone https://github.com/nothingtosayyy/Mulberry-web.git my-site
+cd my-site
+npm install
+git clone https://github.com/nothingtosayyy/Mulberry-SKILL.git data-repo
+npm run build:index
+npm run dev   # http://localhost:5173
 ```
 
-`vercel.json` 关键配置:
-- `rewrites: "/((?!api/).*)" → /index.html`(SPA fallback,排除 `/api/`)
-- `headers: /index.json → Cache-Control: max-age=300, s-maxage=86400`
+## 📚 配套文档
 
-> GitHub push 不会自动触发 Vercel 部署(项目未接 GitHub 集成),需要手动 CLI 部署。
-
-## 🏷 仓库主题词(给 GitHub About 区域用)
-
-复制下面 20 个到 **GitHub → About → Topics**,最大化曝光:
-
-```
-blog-template, portfolio-template, personal-blog, react-template, vite,
-vercel, static-site, markdown, react-router, seo-friendly, dark-mode,
-responsive, github-api, personal-website, template, indie-hacker,
-content-management, web-template, frontend-template, portfolio
-```
-
-**Repository Description 建议**(About 区域一行):
-
-```
-✨ 个人 blog / 作品集 / 工具收藏模板 · React + Vite + Vercel · 一键部署
-```
-
-英文版(若你面向国际开发者):
-
-```
-✨ Personal blog / portfolio / tool collection template · React + Vite + Vercel · One-click deploy
-```
+- [GitHub 主题词建议(20 个英文关键词,提升曝光)](docs/github-topics.md)
+- [SEO 提示词模板(4 个可复用 prompt)](docs/seo-prompts.md)
 
 ## 📜 许可
 
@@ -130,68 +255,8 @@ MIT — 自由使用、修改、商用。
 
 ---
 
-<a id="english"></a>
-
-<details>
-<summary><strong>🇬🇧 English version</strong>(click to expand)</summary>
-
-# Mulberry
-
-> **Personal blog / portfolio / tool collection template**
-> React + Vite + Vercel · Content in GitHub · One-click deploy · Zero backend ops
-
-🌐 Live demo: [mulberrytian.vercel.app](https://mulberrytian.vercel.app/)
-
-## ✨ Features
-
-- 🚀 **Zero-config deploy** — Vercel with SPA fallback + Edge cache out of the box
-- 📝 **Content / code separation** — Markdown lives in a separate GitHub repo, syncs without rebuild
-- 🔍 **SEO friendly** — Full Open Graph / Twitter Card / JSON-LD / sitemap / robots.txt
-- 🌗 **Dark mode** — Follows system + manual toggle, persisted in localStorage
-- 📱 **Responsive** — Desktop / tablet / mobile
-- 🖼 **Reading experience** — One-click code copy / image lightbox / route progress bar
-- 📡 **RSS** — Generated at build time, no backend needed
-- 🎨 **Personal branding** — Theme color / font / copy centralized in `src/styles/`
-
-## 🚀 Quick Start (5 min)
-
-```bash
-git clone https://github.com/nothingtosayyy/Mulberry-web.git my-site
-cd my-site
-npm install
-git clone https://github.com/nothingtosayyy/Mulberry-SKILL.git data-repo
-npm run build:index
-npm run dev    # http://localhost:5173
-```
-
-## 📦 Use as a Template (3 steps)
-
-1. **Change site info** — Edit `SITE_NAME / SITE_URL / OG_DEFAULT` in `src/components/SEO.jsx` and `index.html`
-2. **Swap content** — Fork [Mulberry-SKILL](https://github.com/nothingtosayyy/Mulberry-SKILL) / [Mulberry-word](https://github.com/nothingtosayyy/Mulberry-word), drop your own Markdown under `cat/slug/README.md`
-3. **Customize theme** — Override CSS variables (`--accent / --bg / --fg / --font-mono`) in `src/styles/`
-
-## 🛠 Tech Stack
-
-React 18 · Vite 5 · react-router-dom v6 · Vercel Edge Functions · marked · Vercel KV (Upstash) · 纯 CSS(CSS variables, no Tailwind) · 不蒜子(busuanzi for stats)
-
-## 🌐 Deploy to Vercel
-
-```bash
-npm i -g vercel
-vercel login
-vercel --prod
-```
-
-> GitHub push does NOT auto-deploy (no GitHub integration). Use CLI manually.
-
-## 📜 License
-
-MIT — use, modify, commercialize freely.
+<p align="center">
+  <sub>如果这个项目对你有帮助,欢迎 ⭐️ Star!</sub>
+</p>
 
 </details>
-
----
-
-<p align="center">
-  <sub>如果这个项目对你有帮助,欢迎 ⭐️ Star 支持!</sub>
-</p>
