@@ -5,7 +5,7 @@
  *   - 面包屑:Home / 文章 / 标题
  *   - 大标题
  *   - 副标题(摘要)
- *   - 元信息行(作者 · 日期 · 阅读时长)
+ *   - 元信息行(作者 · 日期 · 阅读时长 · 阅读数)
  *   - 主体:左 2/3 正文(800px)+ 右 1/3 "目录" 锚点列表
  *
  * 适配化调整:
@@ -13,6 +13,7 @@
  *   - 标签色用 Mulberry 紫(--accent-light / --accent-bg)
  *   - 阅读时长用构建时估算的数据(articles.json 已有)
  *   - 锚点数据来自 articles.json.toc(构建时从 h2/h3 提取,marked 默认 slugger)
+ *   - UI 文本走 i18n(系统语言),内容(标题/正文)保持原语言
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -23,11 +24,13 @@ import MarkdownBody from '../components/MarkdownBody.jsx'
 import SEO from '../components/SEO.jsx'
 import ShareButton from '../components/ShareButton.jsx'
 import NotFound from './NotFound.jsx'
+import { useI18n } from '../i18n/index.jsx'
 import '../styles/word.css'
 
 export default function WordPage() {
   const { slug } = useParams()
   const navigate = useNavigate()
+  const { t, lang } = useI18n()
   const { data: index } = useArticleIndex()
 
   const article = useMemo(
@@ -40,6 +43,9 @@ export default function WordPage() {
     window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' })
   }, [slug])
 
+  // 文章本身是中文(zh-CN)时 section 给中文标签,反之英文(给搜索引擎更准)
+  const articleLangHint = (lang === 'zh-CN' ? 'zh' : 'en')
+
   if (index && !article) {
     // 路由匹配但文章不存在 → 走统一 404 + 推荐
     return <NotFound />
@@ -48,20 +54,20 @@ export default function WordPage() {
   return (
     <main className="word-detail-page" data-component="word-detail">
       <SEO
-        title={article?.title || '文章'}
-        description={article?.desc || '随笔与想法'}
+        title={article?.title || t('wordDetail.loading')}
+        description={article?.desc || t('wordList.sub')}
         type="article"
         url={article ? `https://mulberrytian.vercel.app/word/${article.slug}` : undefined}
         publishedAt={article?.date ? `${article.date}T00:00:00+08:00` : undefined}
         modifiedAt={article?.modifiedAt ? `${article.modifiedAt}T00:00:00+08:00` : (article?.date ? `${article.date}T00:00:00+08:00` : undefined)}
         keywords={article?.tag ? article.tag.split(/[,，、]/).map((s) => s.trim()).filter(Boolean) : undefined}
-        section={article?.catLabel || '随笔'}
+        section={article?.catLabel || (articleLangHint === 'zh' ? '随笔' : 'Essays')}
       />
       {article ? (
         <WordContent article={article} />
       ) : (
         <div className="word-detail-empty" style={{ color: 'var(--fg-dim)' }}>
-          正在加载…
+          {t('wordDetail.loading')}
         </div>
       )}
     </main>
@@ -69,6 +75,7 @@ export default function WordPage() {
 }
 
 function WordContent({ article }) {
+  const { t } = useI18n()
   const { loading, error, data } = useArticleDetail({ path: article.path })
 
   // 阅读数:三态 loading / ready / hidden(拉失败 或 KV 未配置)
@@ -112,9 +119,9 @@ function WordContent({ article }) {
       <article className="word-detail-main">
         {/* 面包屑 */}
         <nav className="word-detail-breadcrumb" aria-label="breadcrumb">
-          <Link to="/" className="word-breadcrumb-link">首页</Link>
+          <Link to="/" className="word-breadcrumb-link">{t('wordDetail.breadcrumbHome')}</Link>
           <span className="word-breadcrumb-sep">/</span>
-          <Link to="/words" className="word-breadcrumb-link">文章</Link>
+          <Link to="/words" className="word-breadcrumb-link">{t('wordDetail.breadcrumbArticles')}</Link>
           <span className="word-breadcrumb-sep">/</span>
           <span className="word-breadcrumb-current">{article.title}</span>
         </nav>
@@ -133,18 +140,18 @@ function WordContent({ article }) {
           {(article.author || article.date) && article.readingTime && (
             <span className="word-detail-meta-sep">·</span>
           )}
-          {article.readingTime && <span>{article.readingTime} min read</span>}
+          {article.readingTime && <span>{article.readingTime} {t('wordDetail.readingTimeUnit')}</span>}
           {(article.readingTime || article.date) && viewStatus === 'ready' && (
             <span className="word-detail-meta-sep">·</span>
           )}
           {viewStatus === 'ready' && (
-            <span className="word-detail-views">{views.toLocaleString()} 次阅读</span>
+            <span className="word-detail-views">{t('wordDetail.views', views)}</span>
           )}
           {(article.readingTime || article.date) && viewStatus === null && (
             <span className="word-detail-meta-sep">·</span>
           )}
           {viewStatus === null && (
-            <span className="word-detail-views word-detail-views--loading" aria-label="阅读数加载中">
+            <span className="word-detail-views word-detail-views--loading" aria-label={t('wordDetail.viewsLoading')}>
               <span className="word-detail-views-skel" />
             </span>
           )}
@@ -155,10 +162,12 @@ function WordContent({ article }) {
         {/* 正文 */}
         <div className="word-detail-body">
           {loading && (
-            <p style={{ color: 'var(--fg-dim)' }}>正在从 GitHub 加载…</p>
+            <p style={{ color: 'var(--fg-dim)' }}>{t('wordDetail.loading')}</p>
           )}
           {error && (
-            <p style={{ color: 'var(--fg-dim)' }}>加载失败:{String(error.message || error)}</p>
+            <p style={{ color: 'var(--fg-dim)' }}>
+              {t('wordDetail.errorPrefix')}{String(error.message || error)}
+            </p>
           )}
           {!loading && !error && data?.html && (
             <MarkdownBody html={data.html} className="md-body" />
@@ -167,8 +176,8 @@ function WordContent({ article }) {
       </article>
 
       {/* 右侧 目录 */}
-      <aside className="word-detail-toc" aria-label="目录">
-        <div className="word-toc-label">目录</div>
+      <aside className="word-detail-toc" aria-label={t('wordDetail.tocLabel')}>
+        <div className="word-toc-label">{t('wordDetail.tocLabel')}</div>
         {article.toc && article.toc.length > 0 ? (
           <ul className="word-toc-list">
             {article.toc.map((item, i) => (
@@ -181,7 +190,7 @@ function WordContent({ article }) {
             ))}
           </ul>
         ) : (
-          <p className="word-toc-empty">本文章无小节</p>
+          <p className="word-toc-empty">{t('wordDetail.tocLabel') === '目录' ? '本文章无小节' : 'No sections'}</p>
         )}
       </aside>
     </div>

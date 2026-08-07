@@ -3,6 +3,7 @@ import '../styles/hero.css'
 import FaultyTerminal from './FaultyTerminal.jsx'
 import TextType from './TextType.jsx'
 import { useHeroAnimationProps } from '../config/animation.js'
+import { useI18n } from '../i18n/index.jsx'
 
 /**
  * Hero 区(欢迎语 + 去探索按钮)
@@ -11,6 +12,7 @@ import { useHeroAnimationProps } from '../config/animation.js'
  * - 点击「去探索」平滑滚动到下一个 section
  */
 export default function Hero() {
+  const { t } = useI18n()
   const sectionRef = useRef(null)
   // 所有动画参数集中在 src/config/animation.js
   // - 深色模式:Mulberry 紫色动画
@@ -24,6 +26,15 @@ export default function Hero() {
       next.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
+
+  // 标题两句话 — 走 i18n。注:TextType 用 useMemo 依赖 text 数组,
+  // 切换语言时数组变化会触发重新打字。
+  const heroTitleLines = [
+    t('home.heroTitle') === '期望这些内容可以帮助到你_'
+      ? '这是桑葚的收藏集'
+      : 'Welcome to Mulberry',
+    t('home.heroTitle'),
+  ]
 
   return (
     <section className="hero" data-component="hero" ref={sectionRef}>
@@ -48,7 +59,7 @@ export default function Hero() {
         <TextType
           as="h1"
           className="hero-headline"
-          text={['这是桑葚的收藏集', '期望这些内容可以帮助到你']}
+          text={heroTitleLines}
           textColors={['var(--fg-always)', 'var(--accent-light)']}
           typingSpeed={105}
           pauseDuration={2200}
@@ -58,10 +69,10 @@ export default function Hero() {
           cursorCharacter="_"
           cursorClassName="hero-cursor"
         />
-        <p className="hero-sub">与工作或学习相关，收藏能用、好用的内容</p>
+        <p className="hero-sub">{t('home.heroDesc')}</p>
         <div className="hero-ctas">
           <button className="btn btn-white" type="button" onClick={handleExplore}>
-            去探索
+            {t('home.heroExplore')}
             <span className="hero-arrow" aria-hidden="true">
               →
             </span>

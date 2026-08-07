@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Dither from '../components/Dither.jsx'
 import { useDitherAnimationProps } from '../config/animation.js'
 import SEO from '../components/SEO.jsx'
+import { useI18n } from '../i18n/index.jsx'
 import '../styles/about.css'
 
 // 站点上线日期（取自 更新记录.md v0.1.0 + Mulberry-web 仓库 initial commit 0d356b2）
@@ -41,6 +42,7 @@ function renderStat(value) {
  * (不蒜子 PV / UV + 当前页 PV + 运营天数)
  */
 export default function AboutPage() {
+  const { t } = useI18n()
   const ditherProps = useDitherAnimationProps()
 
   // 运营天数:仅依赖本地日期差
@@ -156,8 +158,8 @@ export default function AboutPage() {
   return (
     <main className="about-page">
       <SEO
-        title="关于"
-        description="桑葚集 是一个能用、好用内容的轻量收藏库,数据公开在 GitHub。"
+        title={t('about.pageTitle')}
+        description={t('about.pageDesc')}
         url="https://mulberrytian.vercel.app/about"
       />
       {/* 左:Dither 动画 */}
@@ -207,7 +209,7 @@ export default function AboutPage() {
 
           <footer className="about-footer">
             <a className="about-link" href="https://github.com/nothingtosayyy" target="_blank" rel="noopener noreferrer">
-              GitHub ↗
+              {t('about.github')} ↗
             </a>
             <span className="about-footer-sep">·</span>
             <a className="about-link" href="mailto:tiange1@agent.qq.com">

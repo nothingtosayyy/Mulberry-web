@@ -12,6 +12,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useArticleIndex } from '../hooks/useArticles.js'
 import { useSkillIndex } from '../hooks/useSkillData.js'
 import SEO from '../components/SEO.jsx'
+import { useI18n } from '../i18n/index.jsx'
 import '../styles/notfound.css'
 
 const TOP_N = 3
@@ -24,6 +25,7 @@ function getLatestSkills(skills) {
 }
 
 export default function NotFound() {
+  const { t } = useI18n()
   const location = useLocation()
   const navigate = useNavigate()
   const { data: articleData } = useArticleIndex()
@@ -54,9 +56,9 @@ export default function NotFound() {
       {/* 顶部 404 区 */}
       <section className="notfound-hero">
         <div className="notfound-code" aria-hidden="true">
-          404
+          {t('notFound.title')}
         </div>
-        <h1 className="notfound-title">这里什么都没放</h1>
+        <h1 className="notfound-title">{t('notFound.subtitle')}</h1>
         <p className="notfound-path">
           <code>{location.pathname}</code>
         </p>
@@ -67,24 +69,24 @@ export default function NotFound() {
             className="notfound-btn notfound-btn--primary"
             onClick={() => navigate(-1)}
           >
-            ← 返回上页
+            ← {t('notFound.back')}
           </button>
           <Link to="/" className="notfound-btn notfound-btn--secondary">
-            回首页
+            {t('notFound.home')}
           </Link>
         </div>
       </section>
 
       {/* 也许你想看 */}
       <section className="notfound-recommend">
-        <h2 className="notfound-recommend-title">也许你想看</h2>
+        <h2 className="notfound-recommend-title">{t('notFound.recommendTitle')}</h2>
 
         <div className="notfound-recommend-grid">
           {/* Skills */}
           <div className="notfound-col">
             <div className="notfound-col-head">
-              <span className="notfound-col-label">最新 Skill</span>
-              <Link to="/" className="notfound-col-more">更多 →</Link>
+              <span className="notfound-col-label">{t('notFound.skillsLabel')}</span>
+              <Link to="/" className="notfound-col-more">{t('common.more')} →</Link>
             </div>
             <ul className="notfound-list">
               {latestSkills.length === 0 ? (
@@ -112,8 +114,8 @@ export default function NotFound() {
           {/* 文章 */}
           <div className="notfound-col">
             <div className="notfound-col-head">
-              <span className="notfound-col-label">最新文章</span>
-              <Link to="/words" className="notfound-col-more">更多 →</Link>
+              <span className="notfound-col-label">{t('notFound.articlesLabel')}</span>
+              <Link to="/words" className="notfound-col-more">{t('common.more')} →</Link>
             </div>
             <ul className="notfound-list">
               {latestArticles.length === 0 ? (

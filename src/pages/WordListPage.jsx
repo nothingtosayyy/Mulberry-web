@@ -14,24 +14,27 @@ import { Link } from 'react-router-dom'
 import { useArticleIndex } from '../hooks/useArticles.js'
 import SEO from '../components/SEO.jsx'
 import { RssIcon } from '../components/Icon.jsx'
+import { useI18n } from '../i18n/index.jsx'
 import '../styles/word.css'
 
 export default function WordListPage() {
+  const { t, lang } = useI18n()
   const { loading, error, data } = useArticleIndex()
+
+  // 日期 locale 跟系统语言走(语言切换时即时刷新)
+  const dateLocale = lang === 'en-US' ? 'en-US' : 'zh-CN'
 
   return (
     <main className="word-list-page" data-component="word-list">
       <SEO
-        title="随笔与想法"
-        description="关于产品、设计、AI 的随笔 — 收录在 GitHub 仓库,数据公开。"
+        title={t('wordList.title')}
+        description={t('wordList.sub')}
         url="https://mulberrytian.vercel.app/words"
       />
       {/* 顶部介绍 */}
       <header className="word-list-hero">
-        <h1 className="word-list-title">随笔与想法</h1>
-        <p className="word-list-sub">
-          随笔与想法
-        </p>
+        <h1 className="word-list-title">{t('wordList.title')}</h1>
+        <p className="word-list-sub">{t('wordList.sub')}</p>
       </header>
 
       {/* Latest Posts */}
@@ -39,20 +42,22 @@ export default function WordListPage() {
         <div className="word-list-section-head">
           <h2 className="word-list-section-title">Posts</h2>
           <span className="word-list-section-count">
-            {data ? `${data.articles.length} 篇` : '…'}
+            {data ? t('wordList.count', data.articles.length) : '…'}
           </span>
         </div>
 
         <div className="word-list-body">
           {loading && (
-            <div className="word-list-empty">正在从 GitHub 加载…</div>
+            <div className="word-list-empty">{t('wordList.loading')}</div>
           )}
           {error && !loading && (
-            <div className="word-list-empty">加载失败:{String(error.message || error)}</div>
+            <div className="word-list-empty">
+              {t('wordList.errorPrefix')}{String(error.message || error)}
+            </div>
           )}
           {!loading && !error && data?.articles.length === 0 && (
             <div className="word-list-empty">
-              暂无文章。在 <code>Mulberry-word</code> 仓库添加 <code>&lt;cat&gt;/&lt;slug&gt;/README.md</code> 即可出现在此。
+              {t('wordList.empty', 'Mulberry-word')}
             </div>
           )}
           {!loading && !error && data && data.articles.length > 0 && (
@@ -76,7 +81,7 @@ export default function WordListPage() {
                     <span className="word-card-meta">
                       <span className="word-card-date">
                         {a.date
-                          ? new Date(a.date).toLocaleDateString('en-US', {
+                          ? new Date(a.date).toLocaleDateString(dateLocale, {
                               month: 'short',
                               day: '2-digit',
                               year: 'numeric',
@@ -94,24 +99,30 @@ export default function WordListPage() {
       </section>
 
       {/* RSS 订阅入口 */}
-      <section className="word-list-rss" aria-label="RSS 订阅">
+      <section className="word-list-rss" aria-label={t('wordList.rssTitle')}>
         <div className="word-list-rss-icon" aria-hidden="true">
           <RssIcon size={20} />
         </div>
         <div className="word-list-rss-body">
-          <div className="word-list-rss-title">订阅新文章</div>
-          <p className="word-list-rss-desc">
-            用 RSS 阅读器(Feedly / NetNewsWire / Inoreader 等)可以订阅{' '}
-            <a
-              href="/rss.xml"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="word-list-rss-link"
-            >
-              /rss.xml
-            </a>
-            ,有新文章时自动推送,不用刷网页。
-          </p>
+          <div className="word-list-rss-title">{t('wordList.rssTitle')}</div>
+          {(() => {
+            const rss = t('wordList.rssDesc', (
+              <a
+                href="/rss.xml"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="word-list-rss-link"
+              >
+                /rss.xml
+              </a>
+            ))
+            // rssDesc 返回 { text, link, suffix } 结构
+            return (
+              <p className="word-list-rss-desc">
+                {rss.text}{rss.link}{rss.suffix}
+              </p>
+            )
+          })()}
         </div>
       </section>
     </main>

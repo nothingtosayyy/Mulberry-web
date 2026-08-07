@@ -2,6 +2,7 @@ import { useToast } from '../context/ToastContext.jsx'
 import { copyToClipboard } from '../utils/clipboard.js'
 import { CalendarIcon, FolderIcon, ChevronLeftIcon, CopyIcon } from './Icon.jsx'
 import ShareButton from './ShareButton.jsx'
+import { useI18n } from '../i18n/index.jsx'
 import '../styles/detail.css'
 
 /**
@@ -15,6 +16,7 @@ import '../styles/detail.css'
  *     副标题: readme.lead > meta.desc
  *     info-desc: readme.paragraphs > SKILL.md body 段落
  *     使用方式: 复制 raw URL(指向 GitHub SKILL.md)
+ * - UI 文本走 i18n,内容(标题/正文/分类)保持原语言
  */
 export default function DetailInfo({
   loading,
@@ -24,6 +26,7 @@ export default function DetailInfo({
   readme,
   onBack,
 }) {
+  const { t } = useI18n()
   const { showToast } = useToast()
 
   if (error) {
@@ -32,11 +35,11 @@ export default function DetailInfo({
         <div className="breadcrumb">
           <button className="breadcrumb-link" type="button" onClick={onBack}>
             <ChevronLeftIcon size={14} />
-            返回收藏集
+            {t('detailInfo.backToList')}
           </button>
         </div>
         <p className="info-desc" style={{ color: 'var(--fg-dim)' }}>
-          加载失败:{String(error.message || error)}
+          {t('detailInfo.errorPrefix')}{String(error.message || error)}
         </p>
       </section>
     )
@@ -62,8 +65,11 @@ export default function DetailInfo({
 
   const handleCopy = async (text, msg) => {
     const ok = await copyToClipboard(text)
-    showToast(ok ? msg : '复制失败')
+    showToast(ok ? msg : t('common.copyFailed'))
   }
+
+  // usageHint 返回结构:{ prefix, source, github }
+  const usageHint = t('detailInfo.usageHint', source, githubUrl)
 
   return (
     <section className="module module--info" data-component="info">
@@ -71,13 +77,13 @@ export default function DetailInfo({
       <div className="breadcrumb">
         <button className="breadcrumb-link" type="button" onClick={onBack}>
           <ChevronLeftIcon size={14} />
-          返回收藏集
+          {t('detailInfo.backToList')}
         </button>
       </div>
 
       {/* 标题与副标题 */}
       <header className="info-header">
-        <h1 className="info-title">{loading ? '加载中…' : name}</h1>
+        <h1 className="info-title">{loading ? t('detailInfo.loading') : name}</h1>
         {!loading && lead && <p className="info-subtitle">{lead}</p>}
       </header>
 
@@ -88,7 +94,7 @@ export default function DetailInfo({
             <>
               <div className="info-meta-item">
                 <CalendarIcon size={14} />
-                收录于 {date}
+                {t('detailInfo.includedOn', date)}
               </div>
               <span className="info-meta-sep">·</span>
             </>
@@ -116,24 +122,25 @@ export default function DetailInfo({
       {/* 使用方式 */}
       {!loading && (
         <div className="info-usage">
-          <div className="usage-label">使用方式</div>
+          <div className="usage-label">{t('detailInfo.usage')}</div>
           <div className="code-block">
             <code>{rawUrl}</code>
             <button
               className="code-copy"
               type="button"
-              onClick={() => handleCopy(rawUrl, '已复制 SKILL.md 链接')}
-              title="复制 SKILL.md 链接"
-              aria-label="复制 SKILL.md 链接"
+              onClick={() => handleCopy(rawUrl, t('detailInfo.copyRawHint'))}
+              title={t('detailInfo.copyRawTitle')}
+              aria-label={t('detailInfo.copyRawTitle')}
             >
               <CopyIcon size={16} />
             </button>
           </div>
           <p className="usage-hint">
-            复制此链接,让 AI 助手拉取 SKILL.md 并按规范使用;
+            {usageHint.prefix}
             {source && (
               <>
-                {' '}原始网站:
+                {' '}
+                {t('detailInfo.sourceLabel')}
                 <a
                   href={source}
                   target="_blank"
@@ -151,7 +158,7 @@ export default function DetailInfo({
               rel="noopener noreferrer"
               style={{ color: 'var(--accent-light)' }}
             >
-              在 GitHub 查看
+              {t('detailInfo.viewOnGithub')}
             </a>
           </p>
         </div>

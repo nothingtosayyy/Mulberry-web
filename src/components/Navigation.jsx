@@ -2,18 +2,24 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { GitHubIcon } from './Icon.jsx'
 import ThemeToggle from './ThemeToggle.jsx'
+import LanguageSwitcher from './LanguageSwitcher.jsx'
+import { useI18n } from '../i18n/index.jsx'
 import '../styles/navigation.css'
 
 /**
  * 顶部固定导航
  * - 左:Logo
  * - 中:资源(下拉:Skill / 文章)/关于
- * - 右:主题切换 + GitHub 链接
+ * - 右:主题切换 + 语言切换 + GitHub 链接
  *
  * 资源下拉:hover 展开 / 离开延迟 200ms 关闭
  * - 视觉上锁深色(用 -always token),与顶栏风格一致
+ *
+ * i18n:所有 UI 文字走 t('key'),切换语言时即时刷新。
+ *      Logo 文字 "桑葚集" 是品牌名,保留原样。
  */
 export default function Navigation() {
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const closeTimer = useRef(null)
   const navigate = useNavigate()
@@ -36,7 +42,7 @@ export default function Navigation() {
   return (
     <nav className="nav" data-component="navigation">
       <div className="nav-left">
-        <Link to="/" className="nav-logo" aria-label="返回主页">
+        <Link to="/" className="nav-logo" aria-label={t('common.back')}>
           <svg className="nav-logo-icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M777.984 669.184c20.9408-16.0256 34.56-41.1648 34.56-69.5808 0-30.3104-15.4112-56.9856-38.8096-72.7552 20.0192-16.0768 32.8704-40.6528 32.8704-68.352 0-23.8592-9.5744-45.4656-25.0368-61.2352 2.6112-8.2944 4.0448-17.152 4.0448-26.3168 0-39.3216-25.9072-72.6016-61.5936-83.6608-5.888-42.6496-42.3936-75.52-86.6816-75.52-13.6192 0-26.5216 3.2256-37.9904 8.7552-15.7696-15.3088-37.2224-24.7808-60.928-24.7808-39.0144 0-72.0896 25.5488-83.4048 60.8256a86.67136 86.67136 0 0 0-36.608-8.0896c-48.384 0-87.6032 39.2192-87.6032 87.6032 0 9.728 1.6384 19.0464 4.5568 27.7504-27.4944 14.7456-46.2336 43.776-46.2336 77.2096 0 19.7632 6.656 37.9904 17.7152 52.6336-24.9856 15.4112-41.6256 42.9568-41.6256 74.4448 0 31.8976 17.1008 59.7504 42.5984 75.0592-15.9744 15.872-25.856 37.8368-25.856 62.1568 0 25.6 11.0592 48.5888 28.5696 64.6144-5.0688 11.1104-7.9872 23.3984-7.9872 36.4032 0 48.384 39.2192 87.6032 87.6032 87.6032h0.4608c4.5056 44.1344 41.7792 78.592 87.1424 78.592 24.9344 0 47.4112-10.496 63.3856-27.2384 14.6432 11.008 32.768 17.6128 52.5312 17.6128 36.5056 0 67.7376-22.3232 80.896-54.016 46.3872-2.2016 83.3536-40.448 83.3536-87.3472 0-3.0208-0.1536-5.9904-0.4608-8.9088 29.1328-14.2336 49.2544-44.032 49.2544-78.6432-0.1024-25.8048-11.1616-48.7936-28.7232-64.8192z" fill="#B172B2"/>
             <path d="M466.3296 203.3152s90.2656 27.3408 20.7872 162.3552S419.2256 484.352 419.2256 484.352s-65.2288-37.1712-61.952-102.912C305.7152 449.024 268.5952 435.2512 246.3744 433.3568s-50.0224 19.6608-73.984 2.56c12.7488-15.4112 17.7664-65.9968 9.1136-92.2624-8.6016-26.2656-3.6864-108.3392 92.416-107.52-51.4048-31.488-62.72-62.464-63.6928-101.5808 65.3312 4.1472 95.6416 5.3248 119.9616-13.6192 24.32-18.8416 147.1488-12.6976 136.1408 82.3808z" fill="#BFE5BD"/>
@@ -60,7 +66,7 @@ export default function Navigation() {
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
-            资源<span className="dropdown-arrow" />
+            {t('nav.resource')}<span className="dropdown-arrow" />
           </button>
 
           {open && (
@@ -78,7 +84,7 @@ export default function Navigation() {
                   onClick={() => setOpen(false)}
                 >
                   <div className="nav-dropdown-item-title">Skills</div>
-                  <div className="nav-dropdown-item-desc">Skill收藏夹 </div>
+                  <div className="nav-dropdown-item-desc">Skill {t('home.findTitle').replace('查找 ', '').replace('Find ', '')}</div>
                 </Link>
                 <Link
                   to="/words"
@@ -86,8 +92,8 @@ export default function Navigation() {
                   role="menuitem"
                   onClick={() => setOpen(false)}
                 >
-                  <div className="nav-dropdown-item-title">文章</div>
-                  <div className="nav-dropdown-item-desc">随笔与想法</div>
+                  <div className="nav-dropdown-item-title">{t('wordList.title').length > 8 ? t('wordList.title').slice(0, 4) : t('wordList.title')}</div>
+                  <div className="nav-dropdown-item-desc">{t('wordList.sub')}</div>
                 </Link>
               </div>
             </div>
@@ -98,12 +104,13 @@ export default function Navigation() {
           to="/about"
           className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`}
         >
-          关于
+          {t('nav.about')}
         </NavLink>
       </div>
 
       <div className="nav-right">
         <ThemeToggle />
+        <LanguageSwitcher />
         <a
           className="nav-gh-btn"
           href="https://github.com/nothingtosayyy"
@@ -112,7 +119,7 @@ export default function Navigation() {
           title="GitHub"
         >
           <GitHubIcon size={16} />
-          Star on GitHub
+          {t('nav.starOnGithub')}
         </a>
       </div>
     </nav>

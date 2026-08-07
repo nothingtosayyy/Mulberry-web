@@ -218,3 +218,42 @@
   border-color: var(--hover-border-always);
   background: var(--hover-bg-soft-always);
 }
+
+/* ── 语言切换按钮(主题切换右侧)── */
+.nav-lang-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border-radius: var(--radius-sm);
+  color: var(--fg-muted-always);
+  border: 1px solid var(--border-strong-always);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  flex-shrink: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav-lang-btn:hover {
+  color: var(--fg-always);
+  border-color: var(--hover-border-always);
+  background: var(--hover-bg-soft-always);
+}
+
+.nav-lang-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.nav-lang-label {
+  font-size: 12px;
+  line-height: 1;
+}

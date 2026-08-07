@@ -72,6 +72,21 @@
         }
       })();
     </script>
+
+    <!-- 防闪烁:React 挂载前同步读 localStorage 解析语言,设到 <html lang>
+         两态:zh-CN | en-US,默认 zh-CN。
+         跟 theme 防闪烁同一思路:内联同步 JS 在挂载前解析,避免 SSR 渲染后被 React 覆盖造成的语义跳变。 -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('mulberry-lang-v1');
+          var lang = (stored === 'zh-CN' || stored === 'en-US') ? stored : 'zh-CN';
+          document.documentElement.setAttribute('lang', lang === 'zh-CN' ? 'zh-CN' : 'en');
+        } catch (e) {
+          document.documentElement.setAttribute('lang', 'zh-CN');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

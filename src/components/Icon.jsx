@@ -98,3 +98,11 @@ export const FileIcon = ({ size = 16 }) => (
     <polyline points="10 9 9 9 8 9" />
   </svg>
 )
+
+export const GlobeIcon = ({ size = 14 }) => (
+  <svg {...baseProps(size)} aria-hidden="true">
+    <circle cx="12" cy="12" r="10" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+  </svg>
+)

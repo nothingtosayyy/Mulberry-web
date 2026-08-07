@@ -9,13 +9,17 @@
  * 容错:
  *   - clipboard API 不可用 / 权限被拒时降级 textarea + execCommand
  *   - 失败给清晰提示"复制失败,请手动复制地址栏",不静默
+ *
+ * i18n:按钮文字 + 提示 toast 都走 t('key')
  */
 import { useState } from 'react'
 import { useToast } from '../context/ToastContext.jsx'
+import { useI18n } from '../i18n/index.jsx'
 import { copyToClipboard } from '../utils/clipboard.js'
 import { ShareIcon } from './Icon.jsx'
 
 export default function ShareButton() {
+  const { t } = useI18n()
   const { showToast } = useToast()
   const [ok, setOk] = useState(false)
 
@@ -23,11 +27,11 @@ export default function ShareButton() {
     const url = typeof window !== 'undefined' ? window.location.href : ''
     const success = await copyToClipboard(url)
     if (success) {
-      showToast('链接已复制')
+      showToast(t('common.linkCopied'))
       setOk(true)
       setTimeout(() => setOk(false), 1500)
     } else {
-      showToast('复制失败,请手动复制地址栏')
+      showToast(t('common.copyFailed'))
     }
   }
 
@@ -36,11 +40,11 @@ export default function ShareButton() {
       type="button"
       className={`share-button ${ok ? 'share-button--ok' : ''}`}
       onClick={handleClick}
-      aria-label="复制链接"
-      title="复制链接"
+      aria-label={t('share.label')}
+      title={t('share.title')}
     >
       <ShareIcon size={14} />
-      <span>{ok ? '已复制' : '分享'}</span>
+      <span>{ok ? t('common.copied') : t('share.label')}</span>
     </button>
   )
 }
